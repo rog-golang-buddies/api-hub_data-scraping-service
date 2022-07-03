@@ -15,3 +15,6 @@
 # vendor/
 
 bin/
+
+# IntelliJ IDEA auxilliary files
+/.idea/
