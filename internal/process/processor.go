@@ -2,6 +2,8 @@ package process
 
 import (
 	"context"
+	"errors"
+
 	"github.com/rog-golang-buddies/internal/load"
 	"github.com/rog-golang-buddies/internal/model"
 	"github.com/rog-golang-buddies/internal/parse"
@@ -24,32 +26,50 @@ func (p *ProcessorImpl) process(ctx context.Context, url string) (*model.ApiSpec
 	//Check availability of url
 	//...
 
+	content := make(chan struct {
+		file *model.FileResource
+		err  error
+	}, 1)
+
 	//Load content by url
-	file, err := p.contentLoader.Load(ctx, url)
-	if err != nil {
-		return nil, err
-	}
+	go func() {
+		file, err := p.contentLoader.Load(ctx, url)
+		content <- struct {
+			file *model.FileResource
+			err  error
+		}{file, err}
+	}()
 
-	//If no errs recognize file type by content
-	fileType, err := p.recognizer.RecognizeFileType(file)
-	if err != nil {
-		return nil, err
-	}
+	select {
+	case result := <-content:
 
-	//Parse API spec of defined type
-	apiSpec, err := p.converter.Convert(file.Content, fileType)
-	if err != nil {
-		return nil, err
-	}
+		if result.err != nil {
+			return nil, result.err
+		}
 
-	return apiSpec, nil
+		//If no errs recognize file type by content
+		fileType, err := p.recognizer.RecognizeFileType(result.file)
+		if err != nil {
+			return nil, err
+		}
+
+		//Parse API spec of defined type
+		apiSpec, err := p.converter.Convert(result.file.Content, fileType)
+		if err != nil {
+			return nil, err
+		}
+
+		return apiSpec, nil
+
+	case <-ctx.Done():
+		return nil, errors.New("Load cancelled")
+	}
 }
 
-func NewProcessor() (UrlProcessor, error) {
-	//Need to pass dependencies through constructor
+func NewProcessor(r recognize.Recognizer, c parse.Converter, cl load.ContentLoader) (UrlProcessor, error) {
 	return &ProcessorImpl{
-		recognizer:    recognize.NewRecognizer(),
-		converter:     parse.NewConverter([]parse.Parser{parse.NewYamlOpenApiParser(), parse.NewJsonOpenApiParser()}),
-		contentLoader: load.NewContentLoader(),
+		recognizer:    r,
+		converter:     c,
+		contentLoader: cl,
 	}, nil
 }
