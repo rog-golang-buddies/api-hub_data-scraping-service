@@ -17,7 +17,7 @@ const (
 	Date    SchemaType = "DATE"
 	Array   SchemaType = "ARRAY"  //Array type may contain single nested field with type to define full array type
 	Map     SchemaType = "MAP"    //Map i.e. { "map_name": {"key1":"value1", "key2":"value2"}}
-	OneOf   SchemaType = "ONE_OF" //OneOf is one of the different types (from nested fields)
+	OneOf   SchemaType = "ONE_OF" //OneOf is one of the different types (C union) (from nested fields)
 	Object  SchemaType = "OBJECT" //Object represent object and contains set of fields inside
 )
 
@@ -37,11 +37,11 @@ const (
 )
 
 //ParameterType represents to what part of request parameter relates
-type ParameterType int
+type ParameterType string
 
 const (
-	ParameterQuery ParameterType = iota
-	ParameterHeader
-	ParameterPath
-	ParameterCookie
+	ParameterQuery  ParameterType = "QUERY"
+	ParameterHeader ParameterType = "HEADER"
+	ParameterPath   ParameterType = "PATH"
+	ParameterCookie ParameterType = "COOKIE"
 )
