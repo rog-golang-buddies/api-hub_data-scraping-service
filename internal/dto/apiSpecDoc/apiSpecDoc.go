@@ -38,7 +38,7 @@ type ApiMethod struct {
 	//Path to send request
 	//For example /open/api/info/
 	//It can contain path parameters,
-	//I think they can be expressed with some placeholders like /api/v1/item/{id}/someth/{someth}
+	//They can be expressed with some placeholders like /api/v1/item/{id}/someth/{someth}
 	//This placeholder definitions need to be searched as Parameters with Parameter.In equals ParameterType.Path
 	Path string
 
@@ -63,11 +63,19 @@ type ApiMethod struct {
 	//If Parameter.In is header - then it represents headers, if cookies - cookies,
 	//so it's header and cookies full representation as well (not just a parametrisation)
 	Parameters []Parameter
+
+	//ExternalDoc represents link to external method documentation (if exists)
+	//
+	ExternalDoc *ExternalDoc
 }
 
 //Schema represents type or structure of request/response/metadata
-//Type, properties and description of the specific Schema field
+//Also type, properties and description of the specific Schema field
 //This is not the same as swagger schema!
+//
+//General purpose of the Schema is to provide description for the UI how to
+//generate sample method body for example. So it purpose to provide information to view to form sample request.
+//
 //Schema focuses on description of json body structure (or parameter).
 //Constraints supposed to be additional field in the schema.
 /*
@@ -136,11 +144,14 @@ type MediaTypeObject struct {
 	Schema Schema
 }
 
+//RequestBody is a representation of request body
 type RequestBody struct {
 	Description string
 
+	//Content represents request object for the different media types
 	Content map[string]MediaTypeObject
 
+	//Required define is request body required
 	Required bool
 }
 
@@ -170,4 +181,14 @@ type Parameter struct {
 
 	//Required defines is parameter required
 	Required bool
+}
+
+//ExternalDoc may be available for the Open API
+//And contain link to description of request method
+//Maybe useful also for debugging - to find failed API description rapidly
+type ExternalDoc struct {
+	Description string
+
+	//Url to external documentation about resource
+	Url string
 }
