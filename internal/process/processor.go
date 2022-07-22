@@ -10,6 +10,7 @@ import (
 
 //UrlProcessor represents provide entrypoint for the url processing
 //full processing of the incoming
+//go:generate mockgen -source=processor.go -destination=./mocks/processor.go -package=process
 type UrlProcessor interface {
 	process(ctx context.Context, url string) (*model.ApiSpecDoc, error)
 }
@@ -45,11 +46,10 @@ func (p *ProcessorImpl) process(ctx context.Context, url string) (*model.ApiSpec
 	return apiSpec, nil
 }
 
-func NewProcessor() (UrlProcessor, error) {
-	//Need to pass dependencies through constructor
+func NewProcessor(r recognize.Recognizer, c parse.Converter, cl load.ContentLoader) (UrlProcessor, error) {
 	return &ProcessorImpl{
-		recognizer:    recognize.NewRecognizer(),
-		converter:     parse.NewConverter([]parse.Parser{parse.NewYamlOpenApiParser(), parse.NewJsonOpenApiParser()}),
-		contentLoader: load.NewContentLoader(),
+		recognizer:    r,
+		converter:     c,
+		contentLoader: cl,
 	}, nil
 }

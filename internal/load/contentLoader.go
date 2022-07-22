@@ -7,6 +7,7 @@ import (
 )
 
 //ContentLoader loads content by url
+//go:generate mockgen -source=contentLoader.go -destination=./mocks/contentLoader.go -package=load
 type ContentLoader interface {
 	Load(ctx context.Context, url string) (*model.FileResource, error)
 }

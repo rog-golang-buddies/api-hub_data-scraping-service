@@ -6,6 +6,7 @@ import (
 )
 
 //Converter converts file data to API specification document using specific file type
+//go:generate mockgen -source=converter.go -destination=./mocks/converter.go -package=parse
 type Converter interface {
 	Convert(content []byte, fileType model.AsdFileType) (*model.ApiSpecDoc, error)
 }

@@ -6,6 +6,7 @@ import (
 )
 
 //Recognizer provide functionality to recognize file type by content
+//go:generate mockgen -source=recognizer.go -destination=./mocks/recognizer.go -package=recognize
 type Recognizer interface {
 	//RecognizeFileType recognizes type of the file by content. Probably we may combine it with validation
 	//Also not sure name is needed here. Better to recognize by content (check is file yaml, if yaml - check version;
