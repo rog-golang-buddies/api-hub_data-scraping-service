@@ -2,21 +2,22 @@ package parse
 
 import (
 	"errors"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
 
 //Converter converts file data to API specification document using specific file type
 //go:generate mockgen -source=converter.go -destination=./mocks/converter.go -package=parse
 type Converter interface {
-	Convert(content []byte, fileType model.AsdFileType) (*model.ApiSpecDoc, error)
+	Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error)
 }
 
 type ConverterImpl struct {
 	//For instance, we may have a map to hold parsers for different types. And populate it in NewConverter
-	parsers map[model.AsdFileType]Parser
+	parsers map[fileresource.AsdFileType]Parser
 }
 
-func (c *ConverterImpl) Convert(content []byte, fileType model.AsdFileType) (*model.ApiSpecDoc, error) {
+func (c *ConverterImpl) Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Just example
 	parser, ok := c.parsers[fileType]
 	if !ok {
@@ -31,7 +32,7 @@ func (c *ConverterImpl) Convert(content []byte, fileType model.AsdFileType) (*mo
 }
 
 func NewConverter(parsers []Parser) Converter {
-	parsersMap := make(map[model.AsdFileType]Parser)
+	parsersMap := make(map[fileresource.AsdFileType]Parser)
 	for _, parser := range parsers {
 		parsers[parser.getType()] = parser
 	}

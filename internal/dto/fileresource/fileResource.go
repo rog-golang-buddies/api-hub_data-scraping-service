@@ -1,4 +1,4 @@
-package model
+package fileresource
 
 //FileResource representation of file resource
 type FileResource struct {

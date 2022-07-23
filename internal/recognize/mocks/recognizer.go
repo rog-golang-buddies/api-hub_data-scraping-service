@@ -5,7 +5,7 @@
 package recognize
 
 import (
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,10 +35,10 @@ func (m *MockRecognizer) EXPECT() *MockRecognizerMockRecorder {
 }
 
 // RecognizeFileType mocks base method.
-func (m *MockRecognizer) RecognizeFileType(resource *model.FileResource) (model.AsdFileType, error) {
+func (m *MockRecognizer) RecognizeFileType(resource *fileresource.FileResource) (fileresource.AsdFileType, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RecognizeFileType", resource)
-	ret0, _ := ret[0].(model.AsdFileType)
+	ret0, _ := ret[0].(fileresource.AsdFileType)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

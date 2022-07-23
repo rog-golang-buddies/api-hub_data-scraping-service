@@ -5,7 +5,8 @@
 package parse
 
 import (
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,10 +36,10 @@ func (m *MockConverter) EXPECT() *MockConverterMockRecorder {
 }
 
 // Convert mocks base method.
-func (m *MockConverter) Convert(content []byte, fileType model.AsdFileType) (*model.ApiSpecDoc, error) {
+func (m *MockConverter) Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Convert", content, fileType)
-	ret0, _ := ret[0].(*model.ApiSpecDoc)
+	ret0, _ := ret[0].(*apiSpecDoc.ApiSpecDoc)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

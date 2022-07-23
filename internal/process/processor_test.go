@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/golang/mock/gomock"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	load "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load/mocks"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
 	parse "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse/mocks"
 	recognize "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/recognize/mocks"
 	"github.com/stretchr/testify/assert"
@@ -22,10 +22,10 @@ func Test_RecognizeFail_processReturnsError(t *testing.T) {
 	ctx := context.Background()
 	url := "test_url"
 	expectedErr := errors.New("load error")
-	fileResource := &model.FileResource{}
+	fileResource := new(fileresource.FileResource)
 
 	loadCall := contentLoader.EXPECT().Load(ctx, url).Times(1).Return(fileResource, nil)
-	recognizer.EXPECT().RecognizeFileType(fileResource).After(loadCall).Times(1).Return(model.Undefined, expectedErr)
+	recognizer.EXPECT().RecognizeFileType(fileResource).After(loadCall).Times(1).Return(fileresource.Undefined, expectedErr)
 	converter.EXPECT().Convert(gomock.Any(), gomock.Any()).MaxTimes(0)
 
 	processor, err := NewProcessor(recognizer, converter, contentLoader)

@@ -6,7 +6,7 @@ package load
 
 import (
 	context "context"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -36,10 +36,10 @@ func (m *MockContentLoader) EXPECT() *MockContentLoaderMockRecorder {
 }
 
 // Load mocks base method.
-func (m *MockContentLoader) Load(ctx context.Context, url string) (*model.FileResource, error) {
+func (m *MockContentLoader) Load(ctx context.Context, url string) (*fileresource.FileResource, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Load", ctx, url)
-	ret0, _ := ret[0].(*model.FileResource)
+	ret0, _ := ret[0].(*fileresource.FileResource)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

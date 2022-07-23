@@ -6,7 +6,7 @@ package process
 
 import (
 	context "context"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -36,10 +36,10 @@ func (m *MockUrlProcessor) EXPECT() *MockUrlProcessorMockRecorder {
 }
 
 // process mocks base method.
-func (m *MockUrlProcessor) process(ctx context.Context, url string) (*model.ApiSpecDoc, error) {
+func (m *MockUrlProcessor) process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "process", ctx, url)
-	ret0, _ := ret[0].(*model.ApiSpecDoc)
+	ret0, _ := ret[0].(*apiSpecDoc.ApiSpecDoc)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

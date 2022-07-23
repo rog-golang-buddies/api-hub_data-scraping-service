@@ -1,4 +1,4 @@
-package model
+package fileresource
 
 type AsdFileType int
 

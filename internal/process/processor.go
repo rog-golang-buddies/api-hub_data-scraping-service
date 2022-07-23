@@ -2,8 +2,8 @@ package process
 
 import (
 	"context"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/recognize"
 )
@@ -12,7 +12,7 @@ import (
 //full processing of the incoming
 //go:generate mockgen -source=processor.go -destination=./mocks/processor.go -package=process
 type UrlProcessor interface {
-	process(ctx context.Context, url string) (*model.ApiSpecDoc, error)
+	process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error)
 }
 
 type ProcessorImpl struct {
@@ -21,7 +21,7 @@ type ProcessorImpl struct {
 	contentLoader load.ContentLoader
 }
 
-func (p *ProcessorImpl) process(ctx context.Context, url string) (*model.ApiSpecDoc, error) {
+func (p *ProcessorImpl) process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Check availability of url
 	//...
 
