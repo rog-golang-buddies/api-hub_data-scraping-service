@@ -2,7 +2,7 @@ package parse
 
 import (
 	"errors"
-	"github.com/rog-golang-buddies/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
 )
 
 //YamlOpenApiParser implementation for parsing yml open API files

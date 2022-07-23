@@ -6,10 +6,10 @@ package process
 
 import (
 	context "context"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/rog-golang-buddies/internal/model"
 )
 
 // MockUrlProcessor is a mock of UrlProcessor interface.

@@ -2,7 +2,7 @@ package recognize
 
 import (
 	"errors"
-	"github.com/rog-golang-buddies/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
 )
 
 //Recognizer provide functionality to recognize file type by content

@@ -1,6 +1,6 @@
 package parse
 
-import "github.com/rog-golang-buddies/internal/model"
+import "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
 
 //Parser is common interface with functionality
 //to parse content of the specific API specification document

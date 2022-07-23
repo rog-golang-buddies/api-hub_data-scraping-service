@@ -2,10 +2,10 @@ package process
 
 import (
 	"context"
-	"github.com/rog-golang-buddies/internal/load"
-	"github.com/rog-golang-buddies/internal/model"
-	"github.com/rog-golang-buddies/internal/parse"
-	"github.com/rog-golang-buddies/internal/recognize"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/model"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/recognize"
 )
 
 //UrlProcessor represents provide entrypoint for the url processing
