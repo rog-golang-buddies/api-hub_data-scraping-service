@@ -3,6 +3,7 @@ package load
 import (
 	"context"
 	"errors"
+
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
 
@@ -15,6 +16,7 @@ type ContentLoader interface {
 type ContentLoaderImpl struct {
 }
 
+// Gets context and an url of a OpenApi file (Swagger file) string as parameter and returns a FileResource containing the link, optionally name and main content of the file.
 func (cl *ContentLoaderImpl) Load(ctx context.Context, url string) (*fileresource.FileResource, error) {
 	//load content by url
 	return nil, errors.New("not implemented")

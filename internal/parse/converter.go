@@ -2,6 +2,7 @@ package parse
 
 import (
 	"errors"
+
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
@@ -17,6 +18,7 @@ type ConverterImpl struct {
 	parsers map[fileresource.AsdFileType]Parser
 }
 
+// Gets bytes slice with json/yaml content and a filetype matching the type of the content and returns parsed ApiSpecDoc.
 func (c *ConverterImpl) Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Just example
 	parser, ok := c.parsers[fileType]

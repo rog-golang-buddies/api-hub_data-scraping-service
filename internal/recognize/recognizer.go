@@ -2,6 +2,7 @@ package recognize
 
 import (
 	"errors"
+
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
 

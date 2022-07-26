@@ -2,6 +2,7 @@ package process
 
 import (
 	"context"
+
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
@@ -21,11 +22,12 @@ type ProcessorImpl struct {
 	contentLoader load.ContentLoader
 }
 
+// Gets the url of a OpenApi file (Swagger file) string as parameter and returns an
 func (p *ProcessorImpl) process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Check availability of url
 	//...
 
-	//Load content by url
+	//Load content by url. Ctx check is done inside Load function if it's cancelled, returns an error.
 	file, err := p.contentLoader.Load(ctx, url)
 	if err != nil {
 		return nil, err
