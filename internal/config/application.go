@@ -11,7 +11,7 @@ func ReadConfig() ApplicationConfig {
 	return ApplicationConfig{
 		QueueConfig: QueueConfig{
 			ConsumerQueue: "data-scraping-asd",
-			Url:           "amqp://guest:guest@localhost:5672/",
+			Url:           "amqp://guest:guest@rabbit:5672/",
 			Concurrency:   10,
 		},
 	}
