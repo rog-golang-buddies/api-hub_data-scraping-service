@@ -1,8 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/handler"
+	"log"
+)
 
 func main() {
-	// Feel free to delete this file.
-	fmt.Println("Hello Gophers")
+	conf := config.ReadConfig()
+
+	handl := handler.NewApiSpecDocHandler()
+	listener := queue.NewListener(&conf.QueueConfig, handl)
+
+	err := listener.Start()
+	if err != nil {
+		log.Println("error while listening queue ", err)
+		return
+	}
+	log.Println("application stopped gracefully (not)")
 }
