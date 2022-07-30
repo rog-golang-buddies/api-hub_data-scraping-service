@@ -10,9 +10,11 @@ func ReadConfig() ApplicationConfig {
 	//TODO implement with method to read configuration from file and env
 	return ApplicationConfig{
 		QueueConfig: QueueConfig{
-			ConsumerQueue: "data-scraping-asd",
-			Url:           "amqp://guest:guest@rabbit:5672/",
-			Concurrency:   10,
+			UrlRequestQueue:     "data-scraping-asd",
+			ScrapingResultQueue: "storage-update-asd",
+			NotificationQueue:   "gateway-scrape_notifications",
+			Url:                 "amqp://guest:guest@rabbit:5672/",
+			Concurrency:         10,
 		},
 	}
 }

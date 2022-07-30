@@ -34,7 +34,7 @@ func (listener *ListenerImpl) Start(
 
 	err := consumer.StartConsuming(
 		handler.Handle,
-		config.ConsumerQueue,
+		config.UrlRequestQueue,
 		[]string{}, //No binding, consuming with the default exchange directly by queue name
 		rabbitmq.WithConsumeOptionsConcurrency(config.Concurrency),
 		rabbitmq.WithConsumeOptionsQueueDurable,

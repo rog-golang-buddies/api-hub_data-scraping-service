@@ -5,6 +5,7 @@ import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/handler"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher"
 	"log"
 )
 
@@ -16,12 +17,12 @@ func Start() int {
 	//initialize publisher connection to the queue
 	//this library assumes using one publisher and one consumer per application
 	//https://github.com/wagslane/go-rabbitmq/issues/79
-	publisher, err := queue.NewPublisher(conf.QueueConfig) //TODO pass logger here and add it to publisher options
+	pub, err := publisher.NewPublisher(conf.QueueConfig) //TODO pass logger here and add it to publisher options
 	if err != nil {
 		log.Println("error while starting publisher: ", err)
 		return 1
 	}
-	defer queue.ClosePublisher(publisher)
+	defer publisher.ClosePublisher(pub)
 	//initialize consumer connection to the queue
 	consumer, err := queue.NewConsumer(conf.QueueConfig) //TODO pass logger here and add it to consumer options
 	if err != nil {
@@ -30,7 +31,7 @@ func Start() int {
 	}
 	defer queue.CloseConsumer(consumer)
 
-	handl := handler.NewApiSpecDocHandler()
+	handl := handler.NewApiSpecDocHandler(pub, conf.QueueConfig)
 	listener := queue.NewListener()
 	err = listener.Start(consumer, &conf.QueueConfig, handl)
 	if err != nil {

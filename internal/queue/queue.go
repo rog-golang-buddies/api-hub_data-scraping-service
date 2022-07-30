@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+//Consumer is just an interface for the library consumer which doesn't have one.
 type Consumer interface {
 	io.Closer
 	StartConsuming(
@@ -14,15 +15,6 @@ type Consumer interface {
 		queue string,
 		routingKeys []string,
 		optionFuncs ...func(*rabbitmq.ConsumeOptions),
-	) error
-}
-
-type Publisher interface {
-	io.Closer
-	Publish(
-		data []byte,
-		routingKeys []string,
-		optionFuncs ...func(*rabbitmq.PublishOptions),
 	) error
 }
 
@@ -43,20 +35,5 @@ func CloseConsumer(consumer Consumer) {
 	err := consumer.Close()
 	if err != nil {
 		log.Println("error while closing consumer: ", err)
-	}
-}
-
-func NewPublisher(conf config.QueueConfig) (Publisher, error) {
-	return rabbitmq.NewPublisher(
-		conf.Url,
-		rabbitmq.Config{},
-	)
-}
-
-func ClosePublisher(publisher Publisher) {
-	log.Println("closing publisher")
-	err := publisher.Close()
-	if err != nil {
-		log.Println("error while closing publisher: ", err)
 	}
 }
