@@ -2,8 +2,8 @@ package dto
 
 import "fmt"
 
-//UserNotification represents basic DTO notification to user if requested
-//Initially it supposed to be simple - if err != nil => error happens, else all is ok
+//UserNotification represents basic DTO notification to the user if requested
+//Initially, it supposed to be simple - if err != nil => error happens, else all is ok
 type UserNotification struct {
 	Error *ProcessingError
 }

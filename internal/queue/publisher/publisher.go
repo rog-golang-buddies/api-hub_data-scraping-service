@@ -19,8 +19,8 @@ type Publisher interface {
 }
 
 //NewPublisher create publisher and connects to rabbit under the hood
-//This method appears to be not testable cause it combine 2 responsibilities: create class and connect to queue.
-//I think, we may rely on NewPublisher tested in the library.
+//This method appears to be not testable cause it combines 2 responsibilities: create a class and connect to a queue.
+//I think we may rely on NewPublisher tested in the library.
 func NewPublisher(conf config.QueueConfig) (Publisher, error) {
 	return rabbitmq.NewPublisher(
 		conf.Url,

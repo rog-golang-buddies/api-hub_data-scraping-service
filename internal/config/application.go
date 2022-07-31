@@ -5,9 +5,9 @@ type ApplicationConfig struct {
 }
 
 func ReadConfig() ApplicationConfig {
-	//Stub this method before configuration task not resolved
+	//Stub this method before the configuration task is not resolved
 	//https://github.com/rog-golang-buddies/api-hub_data-scraping-service/issues/10
-	//TODO implement with method to read configuration from file and env
+	//TODO implement with the method to read configuration from file and env
 	return ApplicationConfig{
 		QueueConfig: QueueConfig{
 			UrlRequestQueue:     "data-scraping-asd",

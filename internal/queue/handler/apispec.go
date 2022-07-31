@@ -28,11 +28,11 @@ func (asdh *ApiSpecDocHandler) Handle(delivery rabbitmq.Delivery) rabbitmq.Actio
 	asd := apiSpecDoc.ApiSpecDoc{} //TODO replace this stub with process call
 
 	//publish to the required queue success or error
-	result := dto.ScrapingResult{ApiSpecDoc: asd}
+	result := dto.ScrapingResult{IsNotifyUser: req.IsNotifyUser, ApiSpecDoc: asd}
 	err = asdh.publish(&delivery, result, asdh.config.ScrapingResultQueue)
 	if err != nil {
 		log.Println("error while publishing: ", err)
-		//Here some error while publishing happened - probably something wrong with the queue
+		//Here is some error while publishing happened - probably something wrong with the queue
 		return rabbitmq.NackDiscard
 	}
 	if req.IsNotifyUser {
