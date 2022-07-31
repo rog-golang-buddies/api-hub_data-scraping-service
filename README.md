@@ -17,6 +17,6 @@ In other words this service processes content of Open API file, transforms it to
 ### Starting service
 The easiest way to start an application is to do it with docker.
 If you have docker you just need to run a command from the project root
-`docker-compose -f ./docker/docker-compose-dev.yml up -d --build`. 
+`docker-compose -f ./docker/docker-compose-dev.yml up -d --build`.
 And `docker-compose -f ./docker/docker-compose-dev.yml down` to stop.
 You can observe queues, and send and retrieve messages from queues using the web interface available by address http://localhost:15672 .
