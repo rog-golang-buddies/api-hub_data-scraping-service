@@ -8,6 +8,7 @@ import (
 )
 
 //Listener represents consumer wrapper with the method to start listening for all events for this service
+//go:generate mockgen -source=listener.go -destination=./mocks/listener.go
 type Listener interface {
 	//Start listening queues
 	Start(

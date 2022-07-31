@@ -8,6 +8,7 @@ import (
 )
 
 //Publisher is just an interface for the library publisher which doesn't have one.
+//go:generate mockgen -source=publisher.go -destination=./mocks/publisher.go -package=publisher
 type Publisher interface {
 	io.Closer
 	Publish(
@@ -17,6 +18,9 @@ type Publisher interface {
 	) error
 }
 
+//NewPublisher create publisher and connects to rabbit under the hood
+//This method appears to be not testable cause it combine 2 responsibilities: create class and connect to queue.
+//I think, we may rely on NewPublisher tested in the library.
 func NewPublisher(conf config.QueueConfig) (Publisher, error) {
 	return rabbitmq.NewPublisher(
 		conf.Url,
