@@ -1,8 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal"
+	"os"
+)
 
 func main() {
-	// Feel free to delete this file.
-	fmt.Println("Hello Gophers")
+	os.Exit(internal.Start())
 }
