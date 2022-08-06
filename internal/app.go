@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue"
@@ -15,6 +16,10 @@ func Start() int {
 
 	conf := config.ReadConfig() //read configuration from file & env
 	log, err := logger.NewLogger(&conf)
+	if err != nil {
+		fmt.Println("error creating logger: ", err)
+		return 1
+	}
 	//initialize publisher connection to the queue
 	//this library assumes using one publisher and one consumer per application
 	//https://github.com/wagslane/go-rabbitmq/issues/79
