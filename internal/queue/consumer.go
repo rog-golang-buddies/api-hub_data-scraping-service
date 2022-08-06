@@ -2,9 +2,9 @@ package queue
 
 import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/wagslane/go-rabbitmq"
 	"io"
-	"log"
 )
 
 //Consumer is just an interface for the library consumer which doesn't have one.
@@ -19,11 +19,12 @@ type Consumer interface {
 	) error
 }
 
-func NewConsumer(conf config.QueueConfig) (Consumer, error) {
+func NewConsumer(conf config.QueueConfig, log logger.Logger) (Consumer, error) {
 	consumer, err := rabbitmq.NewConsumer(
 		conf.Url,
 		rabbitmq.Config{},
 		rabbitmq.WithConsumerOptionsLogging,
+		rabbitmq.WithConsumerOptionsLogger(log),
 	)
 	if err != nil {
 		return nil, err
@@ -31,10 +32,10 @@ func NewConsumer(conf config.QueueConfig) (Consumer, error) {
 	return &consumer, nil
 }
 
-func CloseConsumer(consumer Consumer) {
-	log.Println("closing consumer")
+func CloseConsumer(consumer Consumer, log logger.Logger) {
+	log.Info("closing consumer")
 	err := consumer.Close()
 	if err != nil {
-		log.Println("error while closing consumer: ", err)
+		log.Error("error while closing consumer: ", err)
 	}
 }

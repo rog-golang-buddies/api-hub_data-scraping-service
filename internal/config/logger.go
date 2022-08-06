@@ -2,5 +2,5 @@ package config
 
 //LoggerConfig represents configuration of the logger
 type LoggerConfig struct {
-	Level string //Level of minimum logging
+	Level LoggerLevel `default:"info"` //Level of minimum logging
 }

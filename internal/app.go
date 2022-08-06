@@ -3,10 +3,10 @@ package internal
 import (
 	"context"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/handler"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher"
-	"log"
 )
 
 func Start() int {
@@ -14,33 +14,34 @@ func Start() int {
 	defer cancel()
 
 	conf := config.ReadConfig() //read configuration from file & env
+	log, err := logger.NewLogger(&conf)
 	//initialize publisher connection to the queue
 	//this library assumes using one publisher and one consumer per application
 	//https://github.com/wagslane/go-rabbitmq/issues/79
-	pub, err := publisher.NewPublisher(conf.QueueConfig) //TODO pass logger here and add it to publisher options
+	pub, err := publisher.NewPublisher(conf.QueueConfig, log)
 	if err != nil {
-		log.Println("error while starting publisher: ", err)
+		log.Error("error while starting publisher: ", err)
 		return 1
 	}
-	defer publisher.ClosePublisher(pub)
+	defer publisher.ClosePublisher(pub, log)
 	//initialize consumer connection to the queue
-	consumer, err := queue.NewConsumer(conf.QueueConfig) //TODO pass logger here and add it to consumer options
+	consumer, err := queue.NewConsumer(conf.QueueConfig, log)
 	if err != nil {
-		log.Println("error while connecting to the queue: ", err)
+		log.Error("error while connecting to the queue: ", err)
 		return 1
 	}
-	defer queue.CloseConsumer(consumer)
+	defer queue.CloseConsumer(consumer, log)
 
-	handl := handler.NewApiSpecDocHandler(pub, conf.QueueConfig)
+	handl := handler.NewApiSpecDocHandler(pub, conf.QueueConfig, log)
 	listener := queue.NewListener()
 	err = listener.Start(consumer, &conf.QueueConfig, handl)
 	if err != nil {
-		log.Println("error while listening queue ", err)
+		log.Error("error while listening queue ", err)
 		return 1
 	}
 
 	<-ctx.Done()
 
-	log.Println("application stopped gracefully (not)")
+	log.Info("application stopped gracefully (not)")
 	return 0
 }

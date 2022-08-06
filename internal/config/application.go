@@ -1,7 +1,7 @@
 package config
 
 type ApplicationConfig struct {
-	Env         Environment
+	Env         Environment `default:"dev"`
 	Logger      LoggerConfig
 	QueueConfig QueueConfig
 }
