@@ -9,7 +9,7 @@ type ApplicationConfig struct {
 	Queue QueueConfig
 }
 
-//ReadConfig reads configuration from the environment and populate the structure with it
+//ReadConfig reads configuration from the environment and populates the structure with it
 func ReadConfig() (*ApplicationConfig, error) {
 	var conf ApplicationConfig
 	if err := envconfig.Process("", &conf); err != nil {
