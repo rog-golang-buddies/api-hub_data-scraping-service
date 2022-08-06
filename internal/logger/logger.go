@@ -5,6 +5,7 @@ import (
 )
 
 //Logger represents common logger interface
+//go:generate mockgen -source=logger.go -destination=./mocks/logger.go
 type Logger interface {
 	Fatal(args ...interface{})
 	Fatalf(format string, args ...interface{})
