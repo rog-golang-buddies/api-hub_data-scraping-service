@@ -1,6 +1,8 @@
 package config
 
 type ApplicationConfig struct {
+	Env         Environment
+	Logger      LoggerConfig
 	QueueConfig QueueConfig
 }
 
