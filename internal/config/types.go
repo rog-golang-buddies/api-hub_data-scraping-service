@@ -2,6 +2,7 @@ package config
 
 import "go.uber.org/zap/zapcore"
 
+//Environment defines the application environment to adjust settings to it.
 type Environment string
 
 const (
@@ -9,6 +10,7 @@ const (
 	Prod Environment = "prod"
 )
 
+//LoggerLevel defines the minimum logging level to process
 type LoggerLevel string
 
 const (

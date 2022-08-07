@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 )
 
+//ZapLogger represents zap implementation of the Logger interface
 type ZapLogger struct {
 	log   *zap.SugaredLogger
 	level config.LoggerLevel
@@ -62,6 +63,7 @@ func (l *ZapLogger) Tracef(format string, args ...interface{}) {
 	}
 }
 
+//createZapSugaredLogger creates sugared logger from the application configuration
 func createZapSugaredLogger(conf *config.ApplicationConfig) (*zap.SugaredLogger, error) {
 	var zConf zap.Config
 	switch conf.Env {
@@ -83,6 +85,7 @@ func createZapSugaredLogger(conf *config.ApplicationConfig) (*zap.SugaredLogger,
 	return logger.Sugar(), nil
 }
 
+//newZapLogger creates new ZapLogger instance using application configuration
 func newZapLogger(conf *config.ApplicationConfig) (*ZapLogger, error) {
 	logger, err := createZapSugaredLogger(conf)
 	if err != nil {
