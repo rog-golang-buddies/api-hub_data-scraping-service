@@ -5,11 +5,11 @@
 package parse
 
 import (
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	apiSpecDoc "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
+	fileresource "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
 
 // MockConverter is a mock of Converter interface.

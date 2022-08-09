@@ -6,10 +6,10 @@ package load
 
 import (
 	context "context"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	fileresource "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
 
 // MockContentLoader is a mock of ContentLoader interface.

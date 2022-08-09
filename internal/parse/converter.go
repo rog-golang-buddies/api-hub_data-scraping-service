@@ -7,7 +7,8 @@ import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
 
-//Converter converts file data to API specification document using specific file type
+// Converter converts file data to API specification document using specific file type
+//
 //go:generate mockgen -source=converter.go -destination=./mocks/converter.go -package=parse
 type Converter interface {
 	Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error)
@@ -18,7 +19,7 @@ type ConverterImpl struct {
 	parsers map[fileresource.AsdFileType]Parser
 }
 
-// Gets bytes slice with json/yaml content and a filetype matching the type of the content and returns parsed ApiSpecDoc.
+// Convert gets bytes slice with json/yaml content and a filetype matching the type of the content and returns parsed ApiSpecDoc.
 func (c *ConverterImpl) Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Just example
 	parser, ok := c.parsers[fileType]

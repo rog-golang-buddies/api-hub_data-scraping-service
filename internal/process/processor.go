@@ -9,21 +9,22 @@ import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/recognize"
 )
 
-//UrlProcessor represents provide entrypoint for the url processing
-//full processing of the incoming
+// UrlProcessor represents provide entrypoint for the url processing
+// full processing of the incoming
+//
 //go:generate mockgen -source=processor.go -destination=./mocks/processor.go -package=process
 type UrlProcessor interface {
-	process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error)
+	Process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error)
 }
 
-type ProcessorImpl struct {
+type UrlProcessorImpl struct {
 	recognizer    recognize.Recognizer
 	converter     parse.Converter
 	contentLoader load.ContentLoader
 }
 
-// Gets the url of a OpenApi file (Swagger file) string as parameter and returns an
-func (p *ProcessorImpl) process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
+// Process gets the url of a OpenApi file (Swagger file) string as parameter and returns an
+func (p *UrlProcessorImpl) Process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Check availability of url
 	//...
 
@@ -49,7 +50,7 @@ func (p *ProcessorImpl) process(ctx context.Context, url string) (*apiSpecDoc.Ap
 }
 
 func NewProcessor(r recognize.Recognizer, c parse.Converter, cl load.ContentLoader) (UrlProcessor, error) {
-	return &ProcessorImpl{
+	return &UrlProcessorImpl{
 		recognizer:    r,
 		converter:     c,
 		contentLoader: cl,

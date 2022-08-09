@@ -5,10 +5,10 @@
 package recognize
 
 import (
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	fileresource "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
 
 // MockRecognizer is a mock of Recognizer interface.

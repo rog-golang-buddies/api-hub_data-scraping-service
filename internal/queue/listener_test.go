@@ -1,6 +1,7 @@
 package queue_test
 
 import (
+	"context"
 	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
@@ -21,7 +22,7 @@ func TestListenerImpl_Start_noErrors_returnNil(t *testing.T) {
 	conf := config.QueueConfig{
 		UrlRequestQueue: expectedUrl,
 	}
-	err := listener.Start(consumer, &conf, handl)
+	err := listener.Start(context.Background(), consumer, &conf, handl)
 	assert.Nil(t, err)
 }
 
@@ -36,7 +37,7 @@ func TestListenerImpl_Start_noStartConsumingError_returnError(t *testing.T) {
 	conf := config.QueueConfig{
 		UrlRequestQueue: expectedUrl,
 	}
-	err := listener.Start(consumer, &conf, handl)
+	err := listener.Start(context.Background(), consumer, &conf, handl)
 	assert.NotNil(t, err)
 	assert.Equal(t, expectedErr, err, "method must return error from StartConsuming method")
 }
@@ -49,7 +50,7 @@ func TestListenerImpl_Start_nilConsumer_returnError(t *testing.T) {
 	conf := config.QueueConfig{
 		UrlRequestQueue: expectedUrl,
 	}
-	err := listener.Start(nil, &conf, handl)
+	err := listener.Start(context.Background(), nil, &conf, handl)
 	assert.NotNil(t, err)
 }
 
@@ -58,7 +59,7 @@ func TestListenerImpl_Start_nilConfig_returnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	consumer := mock_queue.NewMockConsumer(ctrl)
 	handl := handler.NewMockHandler(ctrl)
-	err := listener.Start(consumer, nil, handl)
+	err := listener.Start(context.Background(), consumer, nil, handl)
 	assert.NotNil(t, err)
 }
 

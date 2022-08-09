@@ -27,13 +27,12 @@ func Test_RecognizeFail_processReturnsError(t *testing.T) {
 
 	loadCall := contentLoader.EXPECT().Load(ctx, url).Times(1).Return(fileResource, nil)
 	recognizer.EXPECT().RecognizeFileType(fileResource).After(loadCall).Times(1).Return(fileresource.Undefined, expectedErr)
-	// converter.EXPECT().Convert(gomock.Any(), gomock.Any()).MaxTimes(0)
 
 	processor, err := NewProcessor(recognizer, converter, contentLoader)
 	assert.Nil(t, err)
 	assert.NotNil(t, processor, "Processor must not be nil")
 
-	asd, err := processor.process(ctx, url)
+	asd, err := processor.Process(ctx, url)
 	assert.Nil(t, asd)
 	assert.Equal(t, expectedErr, err, "Should return error from recognizer")
 }
@@ -56,7 +55,7 @@ func Test_ContentLoaderFail_processReturnsError(t *testing.T) {
 
 	assert.NotNil(t, processor, "Processor must not be nil")
 
-	asd, err := processor.process(ctx, url)
+	asd, err := processor.Process(ctx, url)
 	assert.Nil(t, asd)
 	assert.Equal(t, expectedErr, err, "Should return error from contentLoader")
 }
@@ -81,7 +80,7 @@ func Test_ConverterFail_processReturnsError(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, processor, "Processor must not be nil")
 
-	asd, err := processor.process(ctx, url)
+	asd, err := processor.Process(ctx, url)
 	assert.Nil(t, asd)
 	assert.Equal(t, expectedErr, err, "Should return error from converter")
 }

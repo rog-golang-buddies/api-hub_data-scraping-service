@@ -6,10 +6,10 @@ package process
 
 import (
 	context "context"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	apiSpecDoc "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 )
 
 // MockUrlProcessor is a mock of UrlProcessor interface.
@@ -35,17 +35,17 @@ func (m *MockUrlProcessor) EXPECT() *MockUrlProcessorMockRecorder {
 	return m.recorder
 }
 
-// process mocks base method.
-func (m *MockUrlProcessor) process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
+// Process mocks base method.
+func (m *MockUrlProcessor) Process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "process", ctx, url)
+	ret := m.ctrl.Call(m, "Process", ctx, url)
 	ret0, _ := ret[0].(*apiSpecDoc.ApiSpecDoc)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// process indicates an expected call of process.
-func (mr *MockUrlProcessorMockRecorder) process(ctx, url interface{}) *gomock.Call {
+// Process indicates an expected call of Process.
+func (mr *MockUrlProcessorMockRecorder) Process(ctx, url interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "process", reflect.TypeOf((*MockUrlProcessor)(nil).process), ctx, url)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Process", reflect.TypeOf((*MockUrlProcessor)(nil).Process), ctx, url)
 }
