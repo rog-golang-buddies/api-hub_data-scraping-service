@@ -11,7 +11,7 @@ import (
 //
 //go:generate mockgen -source=converter.go -destination=./mocks/converter.go -package=parse
 type Converter interface {
-	Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error)
+	Convert(file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error)
 }
 
 type ConverterImpl struct {
@@ -20,13 +20,13 @@ type ConverterImpl struct {
 }
 
 // Convert gets bytes slice with json/yaml content and a filetype matching the type of the content and returns parsed ApiSpecDoc.
-func (c *ConverterImpl) Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error) {
+func (c *ConverterImpl) Convert(file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Just example
-	parser, ok := c.parsers[fileType]
+	parser, ok := c.parsers[file.Type]
 	if !ok {
 		return nil, errors.New("file type not supported")
 	}
-	apiSpec, err := parser.parse(content)
+	apiSpec, err := parser.parse(file.Content)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (c *ConverterImpl) Convert(content []byte, fileType fileresource.AsdFileTyp
 func NewConverter(parsers []Parser) Converter {
 	parsersMap := make(map[fileresource.AsdFileType]Parser)
 	for _, parser := range parsers {
-		parsers[parser.getType()] = parser
+		parsersMap[parser.getType()] = parser
 	}
 	return &ConverterImpl{
 		parsers: parsersMap,

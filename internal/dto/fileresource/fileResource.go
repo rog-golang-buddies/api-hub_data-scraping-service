@@ -1,6 +1,6 @@
 package fileresource
 
-//FileResource representation of file resource
+// FileResource representation of file resource
 type FileResource struct {
 	//File name if exists, else empty
 	Name string
@@ -10,4 +10,7 @@ type FileResource struct {
 
 	//File content
 	Content []byte
+
+	//Type of the API specification file (json/yaml ...)
+	Type AsdFileType
 }

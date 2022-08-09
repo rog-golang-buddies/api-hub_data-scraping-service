@@ -36,16 +36,16 @@ func (m *MockConverter) EXPECT() *MockConverterMockRecorder {
 }
 
 // Convert mocks base method.
-func (m *MockConverter) Convert(content []byte, fileType fileresource.AsdFileType) (*apiSpecDoc.ApiSpecDoc, error) {
+func (m *MockConverter) Convert(file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Convert", content, fileType)
+	ret := m.ctrl.Call(m, "Convert", file)
 	ret0, _ := ret[0].(*apiSpecDoc.ApiSpecDoc)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Convert indicates an expected call of Convert.
-func (mr *MockConverterMockRecorder) Convert(content, fileType interface{}) *gomock.Call {
+func (mr *MockConverterMockRecorder) Convert(file interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Convert", reflect.TypeOf((*MockConverter)(nil).Convert), content, fileType)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Convert", reflect.TypeOf((*MockConverter)(nil).Convert), file)
 }

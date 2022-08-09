@@ -5,6 +5,7 @@
 package mock_queue
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -37,15 +38,15 @@ func (m *MockListener) EXPECT() *MockListenerMockRecorder {
 }
 
 // Start mocks base method.
-func (m *MockListener) Start(consumer queue.Consumer, config *config.QueueConfig, handler handler.Handler) error {
+func (m *MockListener) Start(ctx context.Context, consumer queue.Consumer, config *config.QueueConfig, handler handler.Handler) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Start", consumer, config, handler)
+	ret := m.ctrl.Call(m, "Start", ctx, consumer, config, handler)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Start indicates an expected call of Start.
-func (mr *MockListenerMockRecorder) Start(consumer, config, handler interface{}) *gomock.Call {
+func (mr *MockListenerMockRecorder) Start(ctx, consumer, config, handler interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockListener)(nil).Start), consumer, config, handler)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockListener)(nil).Start), ctx, consumer, config, handler)
 }

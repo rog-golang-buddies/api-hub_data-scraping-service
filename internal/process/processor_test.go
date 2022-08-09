@@ -74,7 +74,7 @@ func Test_ConverterFail_processReturnsError(t *testing.T) {
 
 	loadCall := contentLoader.EXPECT().Load(ctx, url).Times(1).Return(fileResource, nil)
 	recognizeCall := recognizer.EXPECT().RecognizeFileType(fileResource).After(loadCall).Times(1).Return(fileresource.YamlOpenApi, nil)
-	converter.EXPECT().Convert(gomock.Any(), gomock.Any()).Times(1).After(recognizeCall).Return(nil, expectedErr)
+	converter.EXPECT().Convert(gomock.Any()).Times(1).After(recognizeCall).Return(nil, expectedErr)
 
 	processor, err := NewProcessor(recognizer, converter, contentLoader)
 	assert.Nil(t, err)
