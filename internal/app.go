@@ -19,7 +19,7 @@ func Start() int {
 		fmt.Println("error while reading configuration")
 		return 1
 	}
-	log, err := logger.NewLogger(&conf)
+	log, err := logger.NewLogger(conf)
 	if err != nil {
 		fmt.Println("error creating logger: ", err)
 		return 1
