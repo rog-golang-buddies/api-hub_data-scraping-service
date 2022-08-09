@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  rabbit:
+    image: rabbitmq:3-management #you may open management UI via http://localhost:15672/#/ login&password == guest
+    container_name: rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  data-scraping-service:
+    container_name: dss
+    build:
+      context: ../.
+      dockerfile: Dockerfile
+    environment:
+      QUEUE_URL: amqp://guest:guest@rabbit:5672/
+    restart: unless-stopped
+    depends_on:
+      - rabbit

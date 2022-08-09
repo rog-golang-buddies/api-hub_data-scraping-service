@@ -4,7 +4,10 @@ go 1.18
 
 require (
 	github.com/golang/mock v1.6.0
+	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/rabbitmq/amqp091-go v1.4.0
 	github.com/stretchr/testify v1.8.0
+	github.com/wagslane/go-rabbitmq v0.10.0
 )
 
 require (
