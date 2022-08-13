@@ -2,9 +2,9 @@ package publisher
 
 import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/wagslane/go-rabbitmq"
 	"io"
-	"log"
 )
 
 //Publisher is just an interface for the library publisher which doesn't have one.
@@ -21,17 +21,18 @@ type Publisher interface {
 //NewPublisher creates a publisher and connects to the rabbit under the hood.
 //This method appears to be not testable cause it combines 2 responsibilities: create an instance and connect to a queue.
 //I think we may rely on NewPublisher has been already tested in the library.
-func NewPublisher(conf config.QueueConfig) (Publisher, error) {
+func NewPublisher(conf config.QueueConfig, log logger.Logger) (Publisher, error) {
 	return rabbitmq.NewPublisher(
 		conf.Url,
 		rabbitmq.Config{},
+		rabbitmq.WithPublisherOptionsLogger(log),
 	)
 }
 
-func ClosePublisher(publisher Publisher) {
-	log.Println("closing publisher")
+func ClosePublisher(publisher Publisher, log logger.Logger) {
+	log.Info("closing publisher")
 	err := publisher.Close()
 	if err != nil {
-		log.Println("error while closing publisher: ", err)
+		log.Error("error while closing publisher: ", err)
 	}
 }
