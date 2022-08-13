@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/handler"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/recognize"
 )
 
 func Start() int {

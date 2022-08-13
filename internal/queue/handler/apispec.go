@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher"
 	"github.com/wagslane/go-rabbitmq"
 )
@@ -30,7 +30,7 @@ func (asdh *ApiSpecDocHandler) Handle(ctx context.Context, delivery rabbitmq.Del
 	//here processing of the request happens...
 	asd, err := asdh.processor.Process(ctx, req.FileUrl)
 	if err != nil {
-		log.Println("error while processing url: ", err)
+		asdh.log.Error("error while processing url: ", err)
 		return rabbitmq.NackDiscard
 	}
 
