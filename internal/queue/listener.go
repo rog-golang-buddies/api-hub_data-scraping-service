@@ -1,17 +1,20 @@
 package queue
 
 import (
+	"context"
 	"errors"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/handler"
 	"github.com/wagslane/go-rabbitmq"
 )
 
-//Listener represents the consumer wrapper with the method to start listening for all events for this service
+// Listener represents the consumer wrapper with the method to start listening for all events for this service
+//
 //go:generate mockgen -source=listener.go -destination=./mocks/listener.go
 type Listener interface {
 	//Start listening queues
 	Start(
+		ctx context.Context,
 		consumer Consumer,
 		config *config.QueueConfig,
 		handler handler.Handler,
@@ -22,6 +25,7 @@ type ListenerImpl struct {
 }
 
 func (listener *ListenerImpl) Start(
+	ctx context.Context,
 	consumer Consumer,
 	config *config.QueueConfig,
 	handler handler.Handler,
@@ -33,8 +37,12 @@ func (listener *ListenerImpl) Start(
 		return errors.New("configuration must not be nil")
 	}
 
+	handl := func(delivery rabbitmq.Delivery) rabbitmq.Action {
+		return handler.Handle(ctx, delivery)
+	}
+
 	err := consumer.StartConsuming(
-		handler.Handle,
+		handl,
 		config.UrlRequestQueue,
 		[]string{}, //No binding, consuming with the default exchange directly by queue name
 		rabbitmq.WithConsumeOptionsConcurrency(config.Concurrency),

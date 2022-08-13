@@ -5,6 +5,7 @@
 package handler
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,15 +36,15 @@ func (m *MockHandler) EXPECT() *MockHandlerMockRecorder {
 }
 
 // Handle mocks base method.
-func (m *MockHandler) Handle(delivery rabbitmq.Delivery) rabbitmq.Action {
+func (m *MockHandler) Handle(ctx context.Context, delivery rabbitmq.Delivery) rabbitmq.Action {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle", delivery)
+	ret := m.ctrl.Call(m, "Handle", ctx, delivery)
 	ret0, _ := ret[0].(rabbitmq.Action)
 	return ret0
 }
 
 // Handle indicates an expected call of Handle.
-func (mr *MockHandlerMockRecorder) Handle(delivery interface{}) *gomock.Call {
+func (mr *MockHandlerMockRecorder) Handle(ctx, delivery interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockHandler)(nil).Handle), delivery)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockHandler)(nil).Handle), ctx, delivery)
 }

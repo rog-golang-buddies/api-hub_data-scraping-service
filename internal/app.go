@@ -4,10 +4,14 @@ import (
 	"context"
 	"fmt"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/handler"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/recognize"
 )
 
 func Start() int {
@@ -22,6 +26,12 @@ func Start() int {
 	log, err := logger.NewLogger(conf)
 	if err != nil {
 		fmt.Println("error creating logger: ", err)
+		return 1
+	}
+
+	proc, err := createDefaultProcessor()
+	if err != nil {
+		log.Error("error while creating processor: ", err)
 		return 1
 	}
 	//initialize publisher connection to the queue
@@ -41,9 +51,9 @@ func Start() int {
 	}
 	defer queue.CloseConsumer(consumer, log)
 
-	handl := handler.NewApiSpecDocHandler(pub, conf.Queue, log)
+	handl := handler.NewApiSpecDocHandler(pub, conf.Queue, proc, log)
 	listener := queue.NewListener()
-	err = listener.Start(consumer, &conf.Queue, handl)
+	err = listener.Start(ctx, consumer, &conf.Queue, handl)
 	if err != nil {
 		log.Error("error while listening queue ", err)
 		return 1
@@ -53,4 +63,13 @@ func Start() int {
 
 	log.Info("application stopped gracefully (not)")
 	return 0
+}
+
+func createDefaultProcessor() (process.UrlProcessor, error) {
+	recognizer := recognize.NewRecognizer()
+	parsers := []parse.Parser{parse.NewJsonOpenApiParser(), parse.NewYamlOpenApiParser()}
+	converter := parse.NewConverter(parsers)
+	loader := load.NewContentLoader()
+
+	return process.NewProcessor(recognizer, converter, loader)
 }

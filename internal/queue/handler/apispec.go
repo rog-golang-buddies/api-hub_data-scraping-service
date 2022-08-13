@@ -1,11 +1,12 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher"
 	"github.com/wagslane/go-rabbitmq"
 )
@@ -13,10 +14,11 @@ import (
 type ApiSpecDocHandler struct {
 	publisher publisher.Publisher
 	config    config.QueueConfig
+	processor process.UrlProcessor
 	log       logger.Logger
 }
 
-func (asdh *ApiSpecDocHandler) Handle(delivery rabbitmq.Delivery) rabbitmq.Action {
+func (asdh *ApiSpecDocHandler) Handle(ctx context.Context, delivery rabbitmq.Delivery) rabbitmq.Action {
 	asdh.log.Infof("consumed: %v", string(delivery.Body))
 	//call process here
 	var req dto.UrlRequest
@@ -26,7 +28,11 @@ func (asdh *ApiSpecDocHandler) Handle(delivery rabbitmq.Delivery) rabbitmq.Actio
 		return rabbitmq.NackDiscard
 	}
 	//here processing of the request happens...
-	asd := apiSpecDoc.ApiSpecDoc{} //TODO replace this stub with process call
+	asd, err := asdh.processor.Process(ctx, req.FileUrl)
+	if err != nil {
+		asdh.log.Error("error while processing url: ", err)
+		return rabbitmq.NackDiscard
+	}
 
 	//publish to the required queue success or error
 	result := dto.ScrapingResult{IsNotifyUser: req.IsNotifyUser, ApiSpecDoc: asd}
@@ -61,10 +67,11 @@ func (asdh *ApiSpecDocHandler) publish(delivery *rabbitmq.Delivery, message any,
 	)
 }
 
-func NewApiSpecDocHandler(publisher publisher.Publisher, config config.QueueConfig, log logger.Logger) Handler {
+func NewApiSpecDocHandler(publisher publisher.Publisher, config config.QueueConfig, processor process.UrlProcessor, log logger.Logger) Handler {
 	return &ApiSpecDocHandler{
 		publisher: publisher,
 		config:    config,
+		processor: processor,
 		log:       log,
 	}
 }
