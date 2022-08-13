@@ -6,24 +6,25 @@ import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher"
 	"github.com/wagslane/go-rabbitmq"
-	"log"
 )
 
 type ApiSpecDocHandler struct {
 	publisher publisher.Publisher
 	config    config.QueueConfig
 	processor process.UrlProcessor
+	log       logger.Logger
 }
 
 func (asdh *ApiSpecDocHandler) Handle(ctx context.Context, delivery rabbitmq.Delivery) rabbitmq.Action {
-	log.Printf("consumed: %v", string(delivery.Body))
+	asdh.log.Infof("consumed: %v", string(delivery.Body))
 	//call process here
 	var req dto.UrlRequest
 	err := json.Unmarshal(delivery.Body, &req)
 	if err != nil {
-		log.Printf("error unmarshalling message: '%v', err: %s\n", string(delivery.Body), err)
+		asdh.log.Errorf("error unmarshalling message: '%v', err: %s", string(delivery.Body), err)
 		return rabbitmq.NackDiscard
 	}
 	//here processing of the request happens...
@@ -37,25 +38,25 @@ func (asdh *ApiSpecDocHandler) Handle(ctx context.Context, delivery rabbitmq.Del
 	result := dto.ScrapingResult{IsNotifyUser: req.IsNotifyUser, ApiSpecDoc: asd}
 	err = asdh.publish(&delivery, result, asdh.config.ScrapingResultQueue)
 	if err != nil {
-		log.Println("error while publishing: ", err)
+		asdh.log.Error("error while publishing: ", err)
 		//Here is some error while publishing happened - probably something wrong with the queue
 		return rabbitmq.NackDiscard
 	}
 	if req.IsNotifyUser {
 		err = asdh.publish(&delivery, dto.NewUserNotification(nil), asdh.config.NotificationQueue)
 		if err != nil {
-			log.Println("error while notifying user")
+			asdh.log.Error("error while notifying user")
 			//don't discard this message because it was published to the storage service successfully
 		}
 	}
-	log.Println("Url scraped successfully")
+	asdh.log.Info("url scraped successfully")
 	return rabbitmq.Ack
 }
 
 func (asdh *ApiSpecDocHandler) publish(delivery *rabbitmq.Delivery, message any, queue string) error {
 	content, err := json.Marshal(message)
 	if err != nil {
-		log.Println("error while marshalling: ", err)
+		asdh.log.Info("error while marshalling: ", err)
 		return err
 	}
 	return asdh.publisher.Publish(content,
@@ -66,10 +67,11 @@ func (asdh *ApiSpecDocHandler) publish(delivery *rabbitmq.Delivery, message any,
 	)
 }
 
-func NewApiSpecDocHandler(publisher publisher.Publisher, config config.QueueConfig, processor process.UrlProcessor) Handler {
+func NewApiSpecDocHandler(publisher publisher.Publisher, config config.QueueConfig, processor process.UrlProcessor, log logger.Logger) Handler {
 	return &ApiSpecDocHandler{
 		publisher: publisher,
 		config:    config,
 		processor: processor,
+		log:       log,
 	}
 }
