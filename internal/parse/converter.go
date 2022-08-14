@@ -26,7 +26,7 @@ func (c *ConverterImpl) Convert(file *fileresource.FileResource) (*apiSpecDoc.Ap
 	if !ok {
 		return nil, errors.New("file type not supported")
 	}
-	apiSpec, err := parser.parse(file.Content)
+	apiSpec, err := parser.Parse(file.Content)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (c *ConverterImpl) Convert(file *fileresource.FileResource) (*apiSpecDoc.Ap
 func NewConverter(parsers []Parser) Converter {
 	parsersMap := make(map[fileresource.AsdFileType]Parser)
 	for _, parser := range parsers {
-		parsersMap[parser.getType()] = parser
+		parsersMap[parser.GetType()] = parser
 	}
 	return &ConverterImpl{
 		parsers: parsersMap,
