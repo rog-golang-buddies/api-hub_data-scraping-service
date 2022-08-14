@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
 )
 
 // YamlOpenApiParser implementation for parsing yml open API files
@@ -25,6 +24,6 @@ func (yoap *YamlOpenApiParser) GetType() fileresource.AsdFileType {
 	return fileresource.JsonOpenAPI
 }
 
-func NewYamlOpenApiParser() parse.Parser {
+func NewYamlOpenApiParser() *YamlOpenApiParser {
 	return &YamlOpenApiParser{}
 }

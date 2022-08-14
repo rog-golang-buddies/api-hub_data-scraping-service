@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
 )
 
 // JsonOpenApiParser implementation for parsing json open API files
@@ -19,6 +18,6 @@ func (joap *JsonOpenApiParser) GetType() fileresource.AsdFileType {
 	return fileresource.JsonOpenAPI
 }
 
-func NewJsonOpenApiParser() parse.Parser {
+func NewJsonOpenApiParser() *JsonOpenApiParser {
 	return &JsonOpenApiParser{}
 }
