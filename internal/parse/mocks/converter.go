@@ -5,6 +5,7 @@
 package parse
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -36,16 +37,16 @@ func (m *MockConverter) EXPECT() *MockConverterMockRecorder {
 }
 
 // Convert mocks base method.
-func (m *MockConverter) Convert(file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error) {
+func (m *MockConverter) Convert(ctx context.Context, file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Convert", file)
+	ret := m.ctrl.Call(m, "Convert", ctx, file)
 	ret0, _ := ret[0].(*apiSpecDoc.ApiSpecDoc)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Convert indicates an expected call of Convert.
-func (mr *MockConverterMockRecorder) Convert(file interface{}) *gomock.Call {
+func (mr *MockConverterMockRecorder) Convert(ctx, file interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Convert", reflect.TypeOf((*MockConverter)(nil).Convert), file)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Convert", reflect.TypeOf((*MockConverter)(nil).Convert), ctx, file)
 }

@@ -42,7 +42,7 @@ func (p *UrlProcessorImpl) Process(ctx context.Context, url string) (*apiSpecDoc
 	file.Type = fileType
 
 	//Parse API spec of defined type
-	apiSpec, err := p.converter.Convert(file)
+	apiSpec, err := p.converter.Convert(ctx, file)
 	if err != nil {
 		return nil, err
 	}

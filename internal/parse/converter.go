@@ -1,6 +1,7 @@
 package parse
 
 import (
+	"context"
 	"errors"
 
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
@@ -11,7 +12,7 @@ import (
 //
 //go:generate mockgen -source=converter.go -destination=./mocks/converter.go -package=parse
 type Converter interface {
-	Convert(file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error)
+	Convert(ctx context.Context, file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error)
 }
 
 type ConverterImpl struct {
@@ -20,13 +21,13 @@ type ConverterImpl struct {
 }
 
 // Convert gets bytes slice with json/yaml content and a filetype matching the type of the content and returns parsed ApiSpecDoc.
-func (c *ConverterImpl) Convert(file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error) {
+func (c *ConverterImpl) Convert(ctx context.Context, file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error) {
 	//Just example
 	parser, ok := c.parsers[file.Type]
 	if !ok {
 		return nil, errors.New("file type not supported")
 	}
-	apiSpec, err := parser.Parse(file.Content)
+	apiSpec, err := parser.Parse(ctx, file.Content)
 	if err != nil {
 		return nil, err
 	}
