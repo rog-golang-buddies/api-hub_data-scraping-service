@@ -1,8 +1,8 @@
 package recognize
 
 import (
-	"errors"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
+	"strings"
 
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 )
@@ -23,8 +23,14 @@ type RecognizerImpl struct {
 
 func (r *RecognizerImpl) RecognizeFileType(resource *fileresource.FileResource) (fileresource.AsdFileType, error) {
 	r.log.Info("start file '%s' recognizing", resource.Link)
+	// Initially, probably simple extension recognition will be enough.
+	if strings.HasSuffix(resource.Link, ".json") ||
+		strings.HasSuffix(resource.Link, ".yml") ||
+		strings.HasSuffix(resource.Link, ".yaml") {
+		return fileresource.OpenApi, nil
+	}
 
-	return fileresource.Undefined, errors.New("not implemented")
+	return fileresource.Undefined, nil
 }
 
 func NewRecognizer(log logger.Logger) Recognizer {
