@@ -12,6 +12,6 @@ func TestNewConverter(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	log := mock_logger.NewMockLogger(ctrl)
 	parsers := []Parser{openapi.NewOpenApi(log)}
-	converter := NewConverter(parsers)
+	converter := NewConverter(log, parsers)
 	assert.NotNil(t, converter)
 }

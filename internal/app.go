@@ -30,7 +30,7 @@ func Start() int {
 		return 1
 	}
 
-	proc, err := createDefaultProcessor(log)
+	proc, err := createDefaultProcessor(log, conf)
 	if err != nil {
 		log.Error("error while creating processor: ", err)
 		return 1
@@ -66,11 +66,11 @@ func Start() int {
 	return 0
 }
 
-func createDefaultProcessor(log logger.Logger) (process.UrlProcessor, error) {
-	recognizer := recognize.NewRecognizer()
+func createDefaultProcessor(log logger.Logger, config *config.ApplicationConfig) (process.UrlProcessor, error) {
+	recognizer := recognize.NewRecognizer(log)
 	parsers := []parse.Parser{openapi.NewOpenApi(log)}
-	converter := parse.NewConverter(parsers)
-	loader := load.NewContentLoader()
+	converter := parse.NewConverter(log, parsers)
+	loader := load.NewContentLoader(log, &config.Web)
 
 	return process.NewProcessor(recognizer, converter, loader)
 }

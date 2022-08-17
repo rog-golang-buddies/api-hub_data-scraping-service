@@ -16,7 +16,7 @@ func (p *Parser) Parse(ctx context.Context, content []byte) (*apiSpecDoc.ApiSpec
 	if err != nil {
 		return nil, err
 	}
-	return openapiToApiSpec(openapi), nil
+	return openapiToApiSpec(p.log, openapi), nil
 }
 
 func (p *Parser) GetType() fileresource.AsdFileType {

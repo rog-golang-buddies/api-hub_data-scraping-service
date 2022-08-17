@@ -2,6 +2,8 @@ package openapi
 
 import (
 	"context"
+	"github.com/golang/mock/gomock"
+	mock_logger "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger/mocks"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -23,6 +25,8 @@ func TestParseOpenAPI(t *testing.T) {
 
 func TestOpenapiToApiSpec(t *testing.T) {
 	ctx := context.Background()
+	ctrl := gomock.NewController(t)
+	log := mock_logger.NewMockLogger(ctrl)
 	content, err := os.ReadFile("./mocks/github_stub.yml")
 	if err != nil {
 		return
@@ -32,6 +36,6 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	if err != nil {
 		return
 	}
-	asd := openapiToApiSpec(openAPI)
+	asd := openapiToApiSpec(log, openAPI)
 	assert.NotNil(t, asd)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 )
 
 func parseOpenAPI(ctx context.Context, content []byte) (*openapi3.T, error) {
@@ -15,10 +16,12 @@ func parseOpenAPI(ctx context.Context, content []byte) (*openapi3.T, error) {
 	return doc, nil
 }
 
-func openapiToApiSpec(openapi *openapi3.T) *apiSpecDoc.ApiSpecDoc {
+func openapiToApiSpec(log logger.Logger, openapi *openapi3.T) *apiSpecDoc.ApiSpecDoc {
 	asd := apiSpecDoc.ApiSpecDoc{
-		Type:    apiSpecDoc.TypeOpenApi,
-		Methods: make([]*apiSpecDoc.ApiMethod, 0),
+		Title:       openapi.Info.Title,
+		Description: openapi.Info.Description,
+		Type:        apiSpecDoc.TypeOpenApi,
+		Methods:     make([]*apiSpecDoc.ApiMethod, 0),
 	}
 
 	groups := tagToGroup(openapi.Tags)
@@ -29,7 +32,7 @@ func openapiToApiSpec(openapi *openapi3.T) *apiSpecDoc.ApiSpecDoc {
 
 	asd.Groups = groups
 
-	populateMethods(&asd, openapi.Paths)
+	populateMethods(log, &asd, openapi.Paths)
 	return &asd
 }
 
@@ -49,7 +52,7 @@ func tagToGroup(tags []*openapi3.Tag) []*apiSpecDoc.Group {
 	return groups
 }
 
-func populateMethods(asd *apiSpecDoc.ApiSpecDoc, paths openapi3.Paths) {
+func populateMethods(log logger.Logger, asd *apiSpecDoc.ApiSpecDoc, paths openapi3.Paths) {
 	groupMap := make(map[string]*apiSpecDoc.Group)
 	for _, group := range asd.Groups {
 		groupMap[group.Name] = group
@@ -63,7 +66,6 @@ func populateMethods(asd *apiSpecDoc.ApiSpecDoc, paths openapi3.Paths) {
 			if operation.RequestBody != nil {
 				method.RequestBody = convertBody(operation.RequestBody.Value)
 			}
-			//TODO too much nested loops/if's extract to methods/refactor
 			if operation.Tags != nil && len(operation.Tags) > 0 {
 				addedToAnyGroup := false
 				for _, tag := range operation.Tags {
@@ -71,7 +73,7 @@ func populateMethods(asd *apiSpecDoc.ApiSpecDoc, paths openapi3.Paths) {
 						group.Methods = append(group.Methods, method)
 						addedToAnyGroup = true
 					} else {
-						//TODO log record here. WARN or ERROR ?
+						log.Warn("inconsistent state found; tag not mentioned in the tags section")
 					}
 				}
 				if !addedToAnyGroup {

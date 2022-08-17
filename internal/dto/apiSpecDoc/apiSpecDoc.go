@@ -5,6 +5,10 @@ package apiSpecDoc
 // Propose to not store something like components at the initial stage - leave it as update to simplify logic
 // So each ApiMethod need to keep all schema (some duplication, but we could update it faster with extending of the model)
 type ApiSpecDoc struct {
+	Title string
+
+	Description string
+
 	//Type of API definition
 	//It's possible to be OpenApi, gRPC and others
 	Type Type
