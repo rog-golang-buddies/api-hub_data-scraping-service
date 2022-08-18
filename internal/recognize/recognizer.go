@@ -22,7 +22,7 @@ type RecognizerImpl struct {
 }
 
 func (r *RecognizerImpl) RecognizeFileType(resource *fileresource.FileResource) (fileresource.AsdFileType, error) {
-	r.log.Info("start file '%s' recognizing", resource.Link)
+	r.log.Infof("start file '%s' recognizing", resource.Link)
 	// Initially, probably simple extension recognition will be enough.
 	if strings.HasSuffix(resource.Link, ".json") ||
 		strings.HasSuffix(resource.Link, ".yml") ||

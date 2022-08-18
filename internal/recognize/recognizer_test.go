@@ -11,7 +11,7 @@ import (
 func TestRecognizeJson_OpenApiType(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	log := mock_logger.NewMockLogger(ctrl)
-	log.EXPECT().Info(gomock.Any())
+	log.EXPECT().Infof(gomock.Any(), gomock.Any())
 	rec := NewRecognizer(log)
 	resource := fileresource.FileResource{Link: "https://github.com/github/rest-api-description/blob/main/descriptions/ghes-3.6/ghes-3.6.json"}
 	fileType, err := rec.RecognizeFileType(&resource)
@@ -22,7 +22,7 @@ func TestRecognizeJson_OpenApiType(t *testing.T) {
 func TestRecognizeYaml_OpenApiType(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	log := mock_logger.NewMockLogger(ctrl)
-	log.EXPECT().Info(gomock.Any())
+	log.EXPECT().Infof(gomock.Any(), gomock.Any())
 	rec := NewRecognizer(log)
 	resource := fileresource.FileResource{Link: "https://github.com/github/rest-api-description/blob/main/descriptions/ghes-3.6/ghes-3.6.yaml"}
 	fileType, err := rec.RecognizeFileType(&resource)
@@ -33,7 +33,7 @@ func TestRecognizeYaml_OpenApiType(t *testing.T) {
 func TestRecognizeWrongExtension_UnknownType(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	log := mock_logger.NewMockLogger(ctrl)
-	log.EXPECT().Info(gomock.Any())
+	log.EXPECT().Infof(gomock.Any(), gomock.Any())
 	rec := NewRecognizer(log)
 	resource := fileresource.FileResource{Link: "https://github.com/github/rest-api-description/blob/main/descriptions/ghes-3.6/ghes-3.6.txt"}
 	fileType, err := rec.RecognizeFileType(&resource)

@@ -73,7 +73,7 @@ func populateMethods(log logger.Logger, asd *apiSpecDoc.ApiSpecDoc, paths openap
 						group.Methods = append(group.Methods, method)
 						addedToAnyGroup = true
 					} else {
-						log.Warn("inconsistent state found; tag not mentioned in the tags section")
+						log.Warnf("inconsistent state found; tag %s not mentioned in the tags section", tag)
 					}
 				}
 				if !addedToAnyGroup {
