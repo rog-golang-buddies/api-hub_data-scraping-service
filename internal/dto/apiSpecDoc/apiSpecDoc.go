@@ -21,6 +21,9 @@ type ApiSpecDoc struct {
 
 	//Methods at the root level without groups
 	Methods []*ApiMethod
+
+	//Origin file hash sum
+	Md5Sum string
 }
 
 // Group represents some grouping rule

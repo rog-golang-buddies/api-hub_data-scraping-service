@@ -2,6 +2,8 @@ package process
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
@@ -46,6 +48,9 @@ func (p *UrlProcessorImpl) Process(ctx context.Context, url string) (*apiSpecDoc
 	if err != nil {
 		return nil, err
 	}
+
+	hash := md5.Sum(file.Content)
+	apiSpec.Md5Sum = hex.EncodeToString(hash[:])
 
 	return apiSpec, nil
 }
