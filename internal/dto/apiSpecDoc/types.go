@@ -68,8 +68,8 @@ const (
 type ParameterType string
 
 const (
-	ParameterQuery  ParameterType = "QUERY"
-	ParameterHeader ParameterType = "HEADER"
-	ParameterPath   ParameterType = "PATH"
-	ParameterCookie ParameterType = "COOKIE"
+	ParameterQuery  ParameterType = "query"
+	ParameterHeader ParameterType = "header"
+	ParameterPath   ParameterType = "path"
+	ParameterCookie ParameterType = "cookie"
 )

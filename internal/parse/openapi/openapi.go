@@ -32,7 +32,7 @@ func openapiToApiSpec(log logger.Logger, openapi *openapi3.T) *apiSpecDoc.ApiSpe
 
 	asd.Groups = groups
 
-	populateMethods(log, &asd, openapi.Paths)
+	populateMethods(log, &asd, openapi.Paths, openapi.Servers)
 	return &asd
 }
 
@@ -52,7 +52,7 @@ func tagToGroup(tags []*openapi3.Tag) []*apiSpecDoc.Group {
 	return groups
 }
 
-func populateMethods(log logger.Logger, asd *apiSpecDoc.ApiSpecDoc, paths openapi3.Paths) {
+func populateMethods(log logger.Logger, asd *apiSpecDoc.ApiSpecDoc, paths openapi3.Paths, rootServers openapi3.Servers) {
 	groupMap := make(map[string]*apiSpecDoc.Group)
 	for _, group := range asd.Groups {
 		groupMap[group.Name] = group
@@ -62,7 +62,14 @@ func populateMethods(log logger.Logger, asd *apiSpecDoc.ApiSpecDoc, paths openap
 			method := new(apiSpecDoc.ApiMethod)
 			method.Path = url
 			method.Description = operation.Description
+			method.ExternalDoc = convertExternalDoc(operation.ExternalDocs)
 			method.Type = apiSpecDoc.MethodType(httpMethod)
+			method.Parameters = convertParameters(operation.Parameters)
+			if operation.Servers != nil {
+				method.Servers = convertServers(*operation.Servers)
+			} else {
+				method.Servers = convertServers(rootServers)
+			}
 			if operation.RequestBody != nil {
 				method.RequestBody = convertBody(operation.RequestBody.Value)
 			}
@@ -86,9 +93,49 @@ func populateMethods(log logger.Logger, asd *apiSpecDoc.ApiSpecDoc, paths openap
 	}
 }
 
+func convertExternalDoc(oEDocs *openapi3.ExternalDocs) *apiSpecDoc.ExternalDoc {
+	return &apiSpecDoc.ExternalDoc{
+		Description: oEDocs.Description,
+		Url:         oEDocs.URL,
+	}
+}
+
+func convertServers(oServers openapi3.Servers) []*apiSpecDoc.Server {
+	servers := make([]*apiSpecDoc.Server, 0, len(oServers))
+	for _, oServ := range oServers {
+		server := apiSpecDoc.Server{
+			Url:         oServ.URL,
+			Description: oServ.Description,
+		}
+		servers = append(servers, &server)
+	}
+	return servers
+}
+
+func convertParameters(oParams openapi3.Parameters) []*apiSpecDoc.Parameter {
+	resParams := make([]*apiSpecDoc.Parameter, 0, len(oParams))
+	for _, oParRef := range oParams {
+		oPar := oParRef.Value
+		if oPar == nil || oPar.Schema == nil {
+			continue
+		}
+
+		param := apiSpecDoc.Parameter{
+			Name:        oPar.Name,
+			In:          apiSpecDoc.ParameterType(oPar.In),
+			Description: oPar.Description,
+			Schema:      convertSchema("", oParRef.Value.Schema.Value),
+			Required:    oPar.Required,
+		}
+		resParams = append(resParams, &param)
+	}
+	return resParams
+}
+
 func convertBody(body *openapi3.RequestBody) *apiSpecDoc.RequestBody {
 	specBody := new(apiSpecDoc.RequestBody)
 	specBody.Description = body.Description
+	specBody.Required = body.Required
 	specContent := make(map[string]*apiSpecDoc.MediaTypeObject)
 	for cType, content := range body.Content {
 		if content.Schema == nil || content.Schema.Value == nil {

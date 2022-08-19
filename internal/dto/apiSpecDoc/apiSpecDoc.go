@@ -40,6 +40,15 @@ type Group struct {
 	Methods []*ApiMethod
 }
 
+func (g *Group) FindMethod(tp MethodType) *ApiMethod {
+	for _, method := range g.Methods {
+		if method.Type == tp {
+			return method
+		}
+	}
+	return nil
+}
+
 // ApiMethod represents particular API method to call
 type ApiMethod struct {
 	//Path to send request
@@ -63,13 +72,13 @@ type ApiMethod struct {
 
 	//Servers represent available paths for requests with description.
 	//In the case of swagger we need to calculate it taking the deepest nested servers definition
-	Servers []Server
+	Servers []*Server
 
 	//Parameters contains all possible request parameters
 	//Including query, path, header and cookie parameters for the Open API
 	//If Parameter.In is header - then it represents headers, if cookies - cookies,
 	//so it's header and cookies full representation as well (not just a parametrisation)
-	Parameters []Parameter
+	Parameters []*Parameter
 
 	//ExternalDoc represents link to external method documentation (if exists)
 	//
@@ -145,6 +154,15 @@ type Schema struct {
 	Fields []*Schema
 }
 
+func (sc *Schema) FindField(name string) *Schema {
+	for _, field := range sc.Fields {
+		if field.Key == name {
+			return field
+		}
+	}
+	return nil
+}
+
 // MediaTypeObject represents schema for the different media types
 // i.e. "application/json" and etc.
 type MediaTypeObject struct {
@@ -184,7 +202,7 @@ type Parameter struct {
 
 	Description string
 
-	Schema Schema
+	Schema *Schema
 
 	//Required defines is parameter required
 	Required bool
