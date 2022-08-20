@@ -7,8 +7,8 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
-	process "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process/mocks"
 	mock_logger "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger/mocks"
+	process "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process/mocks"
 	publisher "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/wagslane/go-rabbitmq"
@@ -49,7 +49,7 @@ func TestApiSpecDocHandler_Handle_publishError_NackDiscard(t *testing.T) {
 		Return(errors.New("publish error"))
 
 	handl := NewApiSpecDocHandler(pub, conf, proc, log)
-	body := `{"FileUrl":"test url","IsNotifyUser":false}`
+	body := `{"file_url":"test url","is_notify_user":false}`
 	delivery := rabbitmq.Delivery{
 		Delivery: amqp091.Delivery{Body: []byte(body)},
 	}
@@ -72,7 +72,7 @@ func TestApiSpecDocHandler_Handle_allCorrectNotificationFalse_called1TimeAck(t *
 	pub.EXPECT().Publish(gomock.Any(), gomock.Eq([]string{queueName}), gomock.Any()).Times(1).Return(nil)
 
 	handl := NewApiSpecDocHandler(pub, conf, proc, log)
-	body := `{"FileUrl":"test url","IsNotifyUser":false}`
+	body := `{"file_url":"test url","is_notify_user":false}`
 	delivery := rabbitmq.Delivery{
 		Delivery: amqp091.Delivery{Body: []byte(body)},
 	}
@@ -98,7 +98,7 @@ func TestApiSpecDocHandler_Handle_allCorrectNotificationFalse_called2TimesAck(t 
 	pub.EXPECT().Publish(gomock.Any(), gomock.Eq([]string{notQName}), gomock.Any()).Times(1).Return(nil).After(firstCall)
 
 	handl := NewApiSpecDocHandler(pub, conf, proc, log)
-	body := `{"FileUrl":"test url","IsNotifyUser":true}`
+	body := `{"file_url":"test url","is_notify_user":true}`
 	delivery := rabbitmq.Delivery{
 		Delivery: amqp091.Delivery{Body: []byte(body)},
 	}
@@ -129,7 +129,7 @@ func TestApiSpecDocHandler_Handle_notificationError_called2TimesAck(t *testing.T
 		After(firstCall)
 
 	handl := NewApiSpecDocHandler(pub, conf, proc, log)
-	body := `{"FileUrl":"test url","IsNotifyUser":true}`
+	body := `{"file_url":"test url","is_notify_user":true}`
 	delivery := rabbitmq.Delivery{
 		Delivery: amqp091.Delivery{Body: []byte(body)},
 	}

@@ -25,12 +25,27 @@ func (asdh *ApiSpecDocHandler) Handle(ctx context.Context, delivery rabbitmq.Del
 	err := json.Unmarshal(delivery.Body, &req)
 	if err != nil {
 		asdh.log.Errorf("error unmarshalling message: '%v', err: %s", string(delivery.Body), err)
+		if req.IsNotifyUser {
+			procErr := dto.NewProcessingError(
+				"internal unmarshalling problem occurred; probably incompatible model versions", err.Error())
+			err = asdh.publish(&delivery, dto.NewUserNotification(&procErr), asdh.config.NotificationQueue)
+			if err != nil {
+				asdh.log.Error("error while notifying user")
+			}
+		}
 		return rabbitmq.NackDiscard
 	}
 	//here processing of the request happens...
 	asd, err := asdh.processor.Process(ctx, req.FileUrl)
 	if err != nil {
 		asdh.log.Error("error while processing url: ", err)
+		if req.IsNotifyUser {
+			procErr := dto.NewProcessingError("error while processing url", err.Error())
+			err = asdh.publish(&delivery, dto.NewUserNotification(&procErr), asdh.config.NotificationQueue)
+			if err != nil {
+				asdh.log.Error("error while notifying user")
+			}
+		}
 		return rabbitmq.NackDiscard
 	}
 
@@ -67,7 +82,10 @@ func (asdh *ApiSpecDocHandler) publish(delivery *rabbitmq.Delivery, message any,
 	)
 }
 
-func NewApiSpecDocHandler(publisher publisher.Publisher, config config.QueueConfig, processor process.UrlProcessor, log logger.Logger) Handler {
+func NewApiSpecDocHandler(publisher publisher.Publisher,
+	config config.QueueConfig,
+	processor process.UrlProcessor,
+	log logger.Logger) Handler {
 	return &ApiSpecDocHandler{
 		publisher: publisher,
 		config:    config,

@@ -32,7 +32,7 @@ func (c *ConverterImpl) Convert(ctx context.Context, file *fileresource.FileReso
 	if err != nil {
 		return nil, err
 	}
-	c.log.Info("file %s successfully parsed", file.Link)
+	c.log.Infof("file %s successfully parsed", file.Link)
 
 	return apiSpec, nil
 }

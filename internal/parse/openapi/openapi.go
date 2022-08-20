@@ -94,6 +94,9 @@ func populateMethods(log logger.Logger, asd *apiSpecDoc.ApiSpecDoc, paths openap
 }
 
 func convertExternalDoc(oEDocs *openapi3.ExternalDocs) *apiSpecDoc.ExternalDoc {
+	if oEDocs == nil {
+		return nil
+	}
 	return &apiSpecDoc.ExternalDoc{
 		Description: oEDocs.Description,
 		Url:         oEDocs.URL,
