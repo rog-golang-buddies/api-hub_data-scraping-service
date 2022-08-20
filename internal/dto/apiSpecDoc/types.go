@@ -18,13 +18,13 @@ const (
 	Number     SchemaType = "NUMBER"
 	String     SchemaType = "STRING"
 	Date       SchemaType = "DATE"
-	Array      SchemaType = "ARRAY"  //Array type may contain single nested field with type to define full array type
+	Array      SchemaType = "ARRAY"  //Array type may contain a single nested field with a type to define the full array type
 	Map        SchemaType = "MAP"    //Map i.e. { "map_name": {"key1":"value1", "key2":"value2"}}
 	OneOf      SchemaType = "ONE_OF" //OneOf is one of the different types (C union) (from nested fields)
-	AnyOf      SchemaType = "ANY_OF" //AnyOf defines that result object can contain any set of sub-schemes
-	AllOf      SchemaType = "ALL_OF" //AllOf defines that result object combines all listed objects/properties.
-	Not        SchemaType = "NOT"    //Not represents type that can't be used. So it's possible to use any of types except "not"
-	Object     SchemaType = "OBJECT" //Object represent object and contains set of fields inside
+	AnyOf      SchemaType = "ANY_OF" //AnyOf defines that the result object can contain any set of sub-schemes
+	AllOf      SchemaType = "ALL_OF" //AllOf defines that the result object combines all listed objects/properties.
+	Not        SchemaType = "NOT"    //Not represents a type that can't be used. So it's possible to use any of the types except "not"
+	Object     SchemaType = "OBJECT" //Object represents the object and contains a set of fields inside
 )
 
 func ResolveSchemaType(strType string) SchemaType {

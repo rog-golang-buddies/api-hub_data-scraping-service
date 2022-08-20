@@ -3,6 +3,6 @@ package fileresource
 type AsdFileType string
 
 const (
-	Undefined AsdFileType = "UNDEFINED"
-	OpenApi   AsdFileType = "OPEN_API"
+	Undefined AsdFileType = "undefined"
+	OpenApi   AsdFileType = "open_api"
 )
