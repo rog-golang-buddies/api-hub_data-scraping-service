@@ -37,7 +37,7 @@ func (c *ConverterImpl) Convert(ctx context.Context, file *fileresource.FileReso
 	return apiSpec, nil
 }
 
-func NewConverter(log logger.Logger, parsers []Parser) Converter {
+func newConverterImpl(log logger.Logger, parsers []Parser) *ConverterImpl {
 	parsersMap := make(map[fileresource.AsdFileType]Parser)
 	for _, parser := range parsers {
 		parsersMap[parser.GetType()] = parser
@@ -46,4 +46,8 @@ func NewConverter(log logger.Logger, parsers []Parser) Converter {
 		parsers: parsersMap,
 		log:     log,
 	}
+}
+
+func NewConverter(log logger.Logger, parsers []Parser) Converter {
+	return newConverterImpl(log, parsers)
 }

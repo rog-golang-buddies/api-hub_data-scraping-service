@@ -27,9 +27,6 @@ type UrlProcessorImpl struct {
 
 // Process gets the url of a OpenApi file (Swagger file) string as parameter and returns an
 func (p *UrlProcessorImpl) Process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
-	//Check availability of url
-	//...
-
 	//Load content by url. Ctx check is done inside Load function if it's cancelled, returns an error.
 	file, err := p.contentLoader.Load(ctx, url)
 	if err != nil {

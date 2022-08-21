@@ -9,6 +9,8 @@ import (
 // Parser is common interface with functionality
 // to parse content of the specific API specification document
 // and to construct ApiSpecDoc object from it
+//
+//go:generate mockgen -source=parser.go -destination=./mocks/parser.go -package=parse
 type Parser interface {
 	//Parse the bytes slice to a ApiSecDoc
 	Parse(ctx context.Context, content []byte) (*apiSpecDoc.ApiSpecDoc, error)
