@@ -89,8 +89,8 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	pmBody := postM.RequestBody
 	assert.NotNil(t, pmBody.Content)
 	assert.True(t, pmBody.Required)
-	pmContent, ok := pmBody.Content["application/json"]
-	assert.True(t, ok)
+	pmContent := pmBody.FindContentByMediaType("application/json")
+	assert.NotNil(t, pmContent)
 	assert.NotNil(t, pmContent.Schema)
 	pmSchema := pmContent.Schema
 	assert.Equal(t, apiSpecDoc.Object, pmSchema.Type)
@@ -139,8 +139,8 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	gBody := postG.RequestBody
 	assert.NotNil(t, gBody.Content)
 	assert.True(t, gBody.Required)
-	gContent, ok := gBody.Content["application/json"]
-	assert.True(t, ok)
+	gContent := gBody.FindContentByMediaType("application/json")
+	assert.NotNil(t, gContent)
 	assert.NotNil(t, gContent.Schema)
 	gSchema := gContent.Schema
 	assert.Equal(t, apiSpecDoc.Object, gSchema.Type)

@@ -139,12 +139,13 @@ func convertBody(body *openapi3.RequestBody) *apiSpecDoc.RequestBody {
 	specBody := new(apiSpecDoc.RequestBody)
 	specBody.Description = body.Description
 	specBody.Required = body.Required
-	specContent := make(map[string]*apiSpecDoc.MediaTypeObject)
+	specContent := make([]*apiSpecDoc.MediaTypeObject, 0, len(body.Content))
 	for cType, content := range body.Content {
 		if content.Schema == nil || content.Schema.Value == nil {
 			continue
 		}
-		specContent[cType] = &apiSpecDoc.MediaTypeObject{Schema: convertSchema("", content.Schema.Value)}
+		specContent = append(specContent,
+			&apiSpecDoc.MediaTypeObject{MediaType: cType, Schema: convertSchema("", content.Schema.Value)})
 	}
 	specBody.Content = specContent
 	return specBody

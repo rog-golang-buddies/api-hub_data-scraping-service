@@ -166,7 +166,8 @@ func (sc *Schema) FindField(name string) *Schema {
 // MediaTypeObject represents schema for the different media types
 // i.e. "application/json" and etc.
 type MediaTypeObject struct {
-	Schema *Schema
+	MediaType string
+	Schema    *Schema
 }
 
 // RequestBody is a representation of request body
@@ -174,10 +175,19 @@ type RequestBody struct {
 	Description string
 
 	//Content represents request object for the different media types
-	Content map[string]*MediaTypeObject
+	Content []*MediaTypeObject
 
 	//Required define is request body required
 	Required bool
+}
+
+func (rb *RequestBody) FindContentByMediaType(mediaType string) *MediaTypeObject {
+	for _, mediaTypeObj := range rb.Content {
+		if mediaTypeObj != nil && mediaTypeObj.MediaType == mediaType {
+			return mediaTypeObj
+		}
+	}
+	return nil
 }
 
 // Server represents server description
