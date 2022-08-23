@@ -1,9 +1,9 @@
 package dto
 
-import "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
+import "github.com/rog-golang-buddies/api_hub_common/apispecdoc"
 
 type ScrapingResult struct {
 	IsNotifyUser bool
 
-	ApiSpecDoc *apiSpecDoc.ApiSpecDoc
+	ApiSpecDoc *apispecdoc.ApiSpecDoc
 }

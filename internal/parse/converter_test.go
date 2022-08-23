@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"github.com/golang/mock/gomock"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
 	mock_logger "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger/mocks"
 	parse "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse/mocks"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse/openapi"
+	"github.com/rog-golang-buddies/api_hub_common/apispecdoc"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -35,7 +35,7 @@ func TestConverterImpl_Convert_success(t *testing.T) {
 		Content: testContent,
 		Type:    fType,
 	}
-	expectedApiSpec := apiSpecDoc.ApiSpecDoc{}
+	expectedApiSpec := apispecdoc.ApiSpecDoc{}
 	getTypeMethod := parser.EXPECT().GetType().Times(1).Return(fileresource.OpenApi)
 	parser.EXPECT().Parse(ctx, testContent).Times(1).Return(&expectedApiSpec, nil).After(getTypeMethod)
 	log.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()

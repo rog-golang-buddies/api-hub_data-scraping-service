@@ -3,8 +3,8 @@ package openapi
 import (
 	"context"
 	"github.com/golang/mock/gomock"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	mock_logger "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger/mocks"
+	"github.com/rog-golang-buddies/api_hub_common/apispecdoc"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -40,7 +40,7 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	asd := openapiToApiSpec(log, openAPI)
 	assert.NotNil(t, asd)
 
-	groupMap := make(map[string]*apiSpecDoc.Group, len(asd.Groups))
+	groupMap := make(map[string]*apispecdoc.Group, len(asd.Groups))
 	for _, group := range asd.Groups {
 		groupMap[group.Name] = group
 	}
@@ -51,13 +51,13 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	assert.NotNil(t, entAdmin)
 	assert.Equal(t, 2, len(entAdmin.Methods))
 	//check get request
-	getM := entAdmin.FindMethod(apiSpecDoc.MethodGet)
+	getM := entAdmin.FindMethod(apispecdoc.MethodGet)
 	assert.NotNil(t, getM)
-	assert.Equal(t, apiSpecDoc.MethodGet, getM.Type)
+	assert.Equal(t, apispecdoc.MethodGet, getM.Type)
 	assert.Equal(t, "/admin/hooks", getM.Path)
 	assert.NotNil(t, getM.Parameters)
 	assert.Equal(t, 2, len(getM.Parameters))
-	var perPageParam, pageParam *apiSpecDoc.Parameter
+	var perPageParam, pageParam *apispecdoc.Parameter
 	for _, par := range getM.Parameters {
 		switch par.Name {
 		case "per_page":
@@ -67,21 +67,21 @@ func TestOpenapiToApiSpec(t *testing.T) {
 		}
 	}
 	assert.NotNil(t, perPageParam)
-	assert.Equal(t, apiSpecDoc.Integer, perPageParam.Schema.Type)
-	assert.Equal(t, apiSpecDoc.ParameterQuery, perPageParam.In)
+	assert.Equal(t, apispecdoc.Integer, perPageParam.Schema.Type)
+	assert.Equal(t, apispecdoc.ParameterQuery, perPageParam.In)
 
 	assert.NotNil(t, pageParam)
-	assert.Equal(t, apiSpecDoc.Integer, pageParam.Schema.Type)
-	assert.Equal(t, apiSpecDoc.ParameterQuery, perPageParam.In)
+	assert.Equal(t, apispecdoc.Integer, pageParam.Schema.Type)
+	assert.Equal(t, apispecdoc.ParameterQuery, perPageParam.In)
 
 	assert.Nil(t, getM.RequestBody)
 	assert.NotNil(t, getM.ExternalDoc)
 	assert.NotNil(t, getM.Servers)
 
 	//check post request
-	postM := entAdmin.FindMethod(apiSpecDoc.MethodPost)
+	postM := entAdmin.FindMethod(apispecdoc.MethodPost)
 	assert.NotNil(t, postM)
-	assert.Equal(t, apiSpecDoc.MethodPost, postM.Type)
+	assert.Equal(t, apispecdoc.MethodPost, postM.Type)
 	assert.Equal(t, "/admin/hooks", postM.Path)
 	assert.Equal(t, 0, len(postM.Parameters))
 	assert.NotNil(t, postM.RequestBody)
@@ -93,17 +93,17 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	assert.NotNil(t, pmContent)
 	assert.NotNil(t, pmContent.Schema)
 	pmSchema := pmContent.Schema
-	assert.Equal(t, apiSpecDoc.Object, pmSchema.Type)
+	assert.Equal(t, apispecdoc.Object, pmSchema.Type)
 
 	assert.Equal(t, 4, len(pmSchema.Fields))
 	nameField := pmSchema.FindField("name")
 	assert.NotNil(t, nameField)
-	assert.Equal(t, apiSpecDoc.String, nameField.Type)
+	assert.Equal(t, apispecdoc.String, nameField.Type)
 	assert.NotEmpty(t, nameField.Description)
 
 	configField := pmSchema.FindField("config")
 	assert.NotNil(t, configField)
-	assert.Equal(t, apiSpecDoc.Object, configField.Type)
+	assert.Equal(t, apispecdoc.Object, configField.Type)
 	assert.NotEmpty(t, configField.Description)
 	assert.NotNil(t, configField.FindField("url"))
 	assert.NotNil(t, configField.FindField("content_type"))
@@ -112,15 +112,15 @@ func TestOpenapiToApiSpec(t *testing.T) {
 
 	eventsField := pmSchema.FindField("events")
 	assert.NotNil(t, eventsField)
-	assert.Equal(t, apiSpecDoc.Array, eventsField.Type)
+	assert.Equal(t, apispecdoc.Array, eventsField.Type)
 	assert.NotEmpty(t, eventsField.Description)
 	assert.NotNil(t, eventsField.Fields)
 	assert.Equal(t, 1, len(eventsField.Fields))
-	assert.Equal(t, apiSpecDoc.String, eventsField.Fields[0].Type)
+	assert.Equal(t, apispecdoc.String, eventsField.Fields[0].Type)
 
 	activeField := pmSchema.FindField("active")
 	assert.NotNil(t, activeField)
-	assert.Equal(t, apiSpecDoc.Boolean, activeField.Type)
+	assert.Equal(t, apispecdoc.Boolean, activeField.Type)
 	assert.NotEmpty(t, activeField.Description)
 	//*************finish "/admin/hooks" checks *****************************
 
@@ -131,9 +131,9 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	assert.Equal(t, 2, len(gists.Methods))
 
 	//post gists some checks
-	postG := gists.FindMethod(apiSpecDoc.MethodPost)
+	postG := gists.FindMethod(apispecdoc.MethodPost)
 	assert.NotNil(t, postG)
-	assert.Equal(t, apiSpecDoc.MethodPost, postG.Type)
+	assert.Equal(t, apispecdoc.MethodPost, postG.Type)
 	assert.Equal(t, "/gists", postG.Path)
 
 	gBody := postG.RequestBody
@@ -143,20 +143,20 @@ func TestOpenapiToApiSpec(t *testing.T) {
 	assert.NotNil(t, gContent)
 	assert.NotNil(t, gContent.Schema)
 	gSchema := gContent.Schema
-	assert.Equal(t, apiSpecDoc.Object, gSchema.Type)
+	assert.Equal(t, apispecdoc.Object, gSchema.Type)
 
 	assert.Equal(t, 3, len(gSchema.Fields))
 	publicField := gSchema.FindField("public")
 	assert.NotNil(t, publicField)
-	assert.Equal(t, apiSpecDoc.OneOf, publicField.Type)
+	assert.Equal(t, apispecdoc.OneOf, publicField.Type)
 	assert.Equal(t, 2, len(publicField.Fields))
 
 	//this anyOf doesn't have names (kin-openapi implementation), so just iterate them
-	var boolField, strField *apiSpecDoc.Schema
+	var boolField, strField *apispecdoc.Schema
 	for _, field := range publicField.Fields {
-		if field.Type == apiSpecDoc.String {
+		if field.Type == apispecdoc.String {
 			strField = field
-		} else if field.Type == apiSpecDoc.Boolean {
+		} else if field.Type == apispecdoc.Boolean {
 			boolField = field
 		}
 	}

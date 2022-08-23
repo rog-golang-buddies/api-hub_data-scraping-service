@@ -1,6 +1,6 @@
 package config
 
-//QueueConfig queue configuration
+// QueueConfig queue configuration
 type QueueConfig struct {
 	//UrlRequestQueue name to listen to the new events
 	UrlRequestQueue string `default:"data-scraping-asd" envconfig:"URL_REQUEST_QUEUE"`

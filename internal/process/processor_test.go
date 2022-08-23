@@ -5,7 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
+	"github.com/rog-golang-buddies/api_hub_common/apispecdoc"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -102,7 +102,7 @@ func TestProcess_completed_hashPopulated(t *testing.T) {
 	fileResource := new(fileresource.FileResource)
 	fileResource.Content = fileContent
 
-	result := &apiSpecDoc.ApiSpecDoc{}
+	result := &apispecdoc.ApiSpecDoc{}
 	loadCall := contentLoader.EXPECT().Load(ctx, url).Times(1).Return(fileResource, nil)
 	recognizeCall := recognizer.EXPECT().RecognizeFileType(fileResource).After(loadCall).Times(1).Return(fileresource.OpenApi, nil)
 	converter.EXPECT().Convert(ctx, gomock.Any()).Times(1).After(recognizeCall).Return(result, nil)
