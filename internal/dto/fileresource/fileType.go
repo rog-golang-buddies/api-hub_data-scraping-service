@@ -1,9 +1,8 @@
 package fileresource
 
-type AsdFileType int
+type AsdFileType string
 
 const (
-	Undefined AsdFileType = iota
-	YamlOpenApi
-	JsonOpenAPI
+	Undefined AsdFileType = "undefined"
+	OpenApi   AsdFileType = "open_api"
 )

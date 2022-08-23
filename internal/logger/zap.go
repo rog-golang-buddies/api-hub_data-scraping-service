@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap"
 )
 
-//ZapLogger represents zap implementation of the Logger interface
+// ZapLogger represents zap implementation of the Logger interface
 type ZapLogger struct {
 	log   *zap.SugaredLogger
 	level config.LoggerLevel
@@ -16,7 +16,7 @@ func (l *ZapLogger) Fatal(args ...interface{}) {
 }
 
 func (l *ZapLogger) Fatalf(format string, args ...interface{}) {
-	l.log.Fatalf(format, args)
+	l.log.Fatalf(format, args...)
 }
 
 func (l *ZapLogger) Error(args ...interface{}) {
@@ -24,7 +24,7 @@ func (l *ZapLogger) Error(args ...interface{}) {
 }
 
 func (l *ZapLogger) Errorf(format string, args ...interface{}) {
-	l.log.Errorf(format, args)
+	l.log.Errorf(format, args...)
 }
 
 func (l *ZapLogger) Warn(args ...interface{}) {
@@ -32,7 +32,7 @@ func (l *ZapLogger) Warn(args ...interface{}) {
 }
 
 func (l *ZapLogger) Warnf(format string, args ...interface{}) {
-	l.log.Warnf(format, args)
+	l.log.Warnf(format, args...)
 }
 
 func (l *ZapLogger) Info(args ...interface{}) {
@@ -40,7 +40,7 @@ func (l *ZapLogger) Info(args ...interface{}) {
 }
 
 func (l *ZapLogger) Infof(format string, args ...interface{}) {
-	l.log.Infof(format, args)
+	l.log.Infof(format, args...)
 }
 
 func (l *ZapLogger) Debug(args ...interface{}) {
@@ -48,7 +48,7 @@ func (l *ZapLogger) Debug(args ...interface{}) {
 }
 
 func (l *ZapLogger) Debugf(format string, args ...interface{}) {
-	l.log.Debugf(format, args)
+	l.log.Debugf(format, args...)
 }
 
 func (l *ZapLogger) Trace(args ...interface{}) {
@@ -59,11 +59,11 @@ func (l *ZapLogger) Trace(args ...interface{}) {
 
 func (l *ZapLogger) Tracef(format string, args ...interface{}) {
 	if l.level != config.TraceLevel {
-		l.log.Debugf(format, args)
+		l.log.Debugf(format, args...)
 	}
 }
 
-//createZapSugaredLogger creates sugared logger from the application configuration
+// createZapSugaredLogger creates sugared logger from the application configuration
 func createZapSugaredLogger(conf *config.ApplicationConfig) (*zap.SugaredLogger, error) {
 	var zConf zap.Config
 	switch conf.Env {
@@ -85,7 +85,7 @@ func createZapSugaredLogger(conf *config.ApplicationConfig) (*zap.SugaredLogger,
 	return logger.Sugar(), nil
 }
 
-//newZapLogger creates new ZapLogger instance using application configuration
+// newZapLogger creates new ZapLogger instance using application configuration
 func newZapLogger(conf *config.ApplicationConfig) (*ZapLogger, error) {
 	logger, err := createZapSugaredLogger(conf)
 	if err != nil {

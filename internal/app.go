@@ -7,6 +7,7 @@ import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse"
+	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/parse/openapi"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/handler"
@@ -29,7 +30,7 @@ func Start() int {
 		return 1
 	}
 
-	proc, err := createDefaultProcessor()
+	proc, err := createDefaultProcessor(log, conf)
 	if err != nil {
 		log.Error("error while creating processor: ", err)
 		return 1
@@ -65,11 +66,11 @@ func Start() int {
 	return 0
 }
 
-func createDefaultProcessor() (process.UrlProcessor, error) {
-	recognizer := recognize.NewRecognizer()
-	parsers := []parse.Parser{parse.NewJsonOpenApiParser(), parse.NewYamlOpenApiParser()}
-	converter := parse.NewConverter(parsers)
-	loader := load.NewContentLoader()
+func createDefaultProcessor(log logger.Logger, config *config.ApplicationConfig) (process.UrlProcessor, error) {
+	recognizer := recognize.NewRecognizer(log)
+	parsers := []parse.Parser{openapi.NewOpenApi(log)}
+	converter := parse.NewConverter(log, parsers)
+	loader := load.NewContentLoader(log, &config.Web)
 
 	return process.NewProcessor(recognizer, converter, loader)
 }

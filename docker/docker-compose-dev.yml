@@ -1,9 +1,18 @@
 version: '3.9'
 
+volumes:
+  rabbit-data:
+    driver: local
+
 services:
   rabbit:
     image: rabbitmq:3-management #you may open management UI via http://localhost:15672/#/ login&password == guest
     container_name: rabbit
+    #hostname required here to work with the volume on persistent queues.
+    #Rabbit saves data by folders whose names are generated from the host. To have data restored on container restart we need to commit the host.
+    hostname: rabbit
+    volumes:
+      - rabbit-data:/var/lib/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"

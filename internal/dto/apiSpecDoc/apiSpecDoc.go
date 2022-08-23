@@ -1,10 +1,14 @@
 package apiSpecDoc
 
-//ApiSpecDoc represents full API Specification document
-//with all required data to view and execute requests
-//Propose to not store something like components at the initial stage - leave it as update to simplify logic
-//So each ApiMethod need to keep all schema (some duplication, but we could update it faster with extending of the model)
+// ApiSpecDoc represents full API Specification document
+// with all required data to view and execute requests
+// Propose to not store something like components at the initial stage - leave it as update to simplify logic
+// So each ApiMethod need to keep all schema (some duplication, but we could update it faster with extending of the model)
 type ApiSpecDoc struct {
+	Title string
+
+	Description string
+
 	//Type of API definition
 	//It's possible to be OpenApi, gRPC and others
 	Type Type
@@ -13,15 +17,18 @@ type ApiSpecDoc struct {
 	//It relates to:
 	//Tags - Open API specs
 	//Services - RPCs
-	Groups []Group
+	Groups []*Group
 
 	//Methods at the root level without groups
-	Methods []ApiMethod
+	Methods []*ApiMethod
+
+	//Origin file hash sum
+	Md5Sum string
 }
 
-//Group represents some grouping rule
-//Tags for the open API
-//Services for the gRPC
+// Group represents some grouping rule
+// Tags for the open API
+// Services for the gRPC
 type Group struct {
 	//Name of the group
 	Name string
@@ -30,10 +37,19 @@ type Group struct {
 	Description string
 
 	//Methods is a set of request methods related to the group
-	Methods []ApiMethod
+	Methods []*ApiMethod
 }
 
-//ApiMethod represents particular API method to call
+func (g *Group) FindMethod(tp MethodType) *ApiMethod {
+	for _, method := range g.Methods {
+		if method.Type == tp {
+			return method
+		}
+	}
+	return nil
+}
+
+// ApiMethod represents particular API method to call
 type ApiMethod struct {
 	//Path to send request
 	//For example /open/api/info/
@@ -52,17 +68,17 @@ type ApiMethod struct {
 	Type MethodType
 
 	//RequestBody is a description of ApiMethod request body, nil if no request body
-	RequestBody *MediaTypeObject
+	RequestBody *RequestBody
 
 	//Servers represent available paths for requests with description.
 	//In the case of swagger we need to calculate it taking the deepest nested servers definition
-	Servers []Server
+	Servers []*Server
 
 	//Parameters contains all possible request parameters
 	//Including query, path, header and cookie parameters for the Open API
 	//If Parameter.In is header - then it represents headers, if cookies - cookies,
 	//so it's header and cookies full representation as well (not just a parametrisation)
-	Parameters []Parameter
+	Parameters []*Parameter
 
 	//ExternalDoc represents link to external method documentation (if exists)
 	//
@@ -135,29 +151,48 @@ type Schema struct {
 
 	//Nested describe nested object/properties
 	//If it's object and contain nested fields
-	Fields []Schema
+	Fields []*Schema
 }
 
-//MediaTypeObject represents schema for the different media types
-//i.e. "application/json" and etc.
+func (sc *Schema) FindField(name string) *Schema {
+	for _, field := range sc.Fields {
+		if field.Key == name {
+			return field
+		}
+	}
+	return nil
+}
+
+// MediaTypeObject represents schema for the different media types
+// i.e. "application/json" and etc.
 type MediaTypeObject struct {
-	Schema Schema
+	MediaType string
+	Schema    *Schema
 }
 
-//RequestBody is a representation of request body
+// RequestBody is a representation of request body
 type RequestBody struct {
 	Description string
 
 	//Content represents request object for the different media types
-	Content map[string]MediaTypeObject
+	Content []*MediaTypeObject
 
 	//Required define is request body required
 	Required bool
 }
 
-//Server represents server description
-//To use in the address line of view
-//https://swagger.io/specification/#server-object
+func (rb *RequestBody) FindContentByMediaType(mediaType string) *MediaTypeObject {
+	for _, mediaTypeObj := range rb.Content {
+		if mediaTypeObj != nil && mediaTypeObj.MediaType == mediaType {
+			return mediaTypeObj
+		}
+	}
+	return nil
+}
+
+// Server represents server description
+// To use in the address line of view
+// https://swagger.io/specification/#server-object
 type Server struct {
 	//Url to access server (no templates, real url)
 	Url string
@@ -166,8 +201,8 @@ type Server struct {
 	Description string
 }
 
-//Parameter is abstraction of additional data to request
-//It is headers for the REST API and metadata for the gRPC
+// Parameter is abstraction of additional data to request
+// It is headers for the REST API and metadata for the gRPC
 type Parameter struct {
 	Name string
 
@@ -177,15 +212,15 @@ type Parameter struct {
 
 	Description string
 
-	Schema Schema
+	Schema *Schema
 
 	//Required defines is parameter required
 	Required bool
 }
 
-//ExternalDoc may be available for the Open API
-//And contain link to description of request method
-//Maybe useful also for debugging - to find failed API description rapidly
+// ExternalDoc may be available for the Open API
+// And contain link to description of request method
+// Maybe useful also for debugging - to find failed API description rapidly
 type ExternalDoc struct {
 	Description string
 

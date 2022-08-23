@@ -2,6 +2,8 @@ package process
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/load"
@@ -25,9 +27,6 @@ type UrlProcessorImpl struct {
 
 // Process gets the url of a OpenApi file (Swagger file) string as parameter and returns an
 func (p *UrlProcessorImpl) Process(ctx context.Context, url string) (*apiSpecDoc.ApiSpecDoc, error) {
-	//Check availability of url
-	//...
-
 	//Load content by url. Ctx check is done inside Load function if it's cancelled, returns an error.
 	file, err := p.contentLoader.Load(ctx, url)
 	if err != nil {
@@ -42,10 +41,13 @@ func (p *UrlProcessorImpl) Process(ctx context.Context, url string) (*apiSpecDoc
 	file.Type = fileType
 
 	//Parse API spec of defined type
-	apiSpec, err := p.converter.Convert(file)
+	apiSpec, err := p.converter.Convert(ctx, file)
 	if err != nil {
 		return nil, err
 	}
+
+	hash := md5.Sum(file.Content)
+	apiSpec.Md5Sum = hex.EncodeToString(hash[:])
 
 	return apiSpec, nil
 }

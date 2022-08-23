@@ -6,12 +6,13 @@ import (
 )
 
 type ApplicationConfig struct {
-	Env         Environment `default:"dev"`
-	Logger      LoggerConfig
-	Queue QueueConfig
+	Env    Environment `default:"dev"`
+	Logger LoggerConfig
+	Queue  QueueConfig
+	Web    Web
 }
 
-//ReadConfig reads configuration from the environment and populates the structure with it
+// ReadConfig reads configuration from the environment and populates the structure with it
 func ReadConfig() (*ApplicationConfig, error) {
 	var conf ApplicationConfig
 	if err := envconfig.Process("", &conf); err != nil {
