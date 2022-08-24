@@ -9,8 +9,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	apiSpecDoc "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	fileresource "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
+	apispecdoc "github.com/rog-golang-buddies/api_hub_common/apispecdoc"
 )
 
 // MockConverter is a mock of Converter interface.
@@ -37,10 +37,10 @@ func (m *MockConverter) EXPECT() *MockConverterMockRecorder {
 }
 
 // Convert mocks base method.
-func (m *MockConverter) Convert(ctx context.Context, file *fileresource.FileResource) (*apiSpecDoc.ApiSpecDoc, error) {
+func (m *MockConverter) Convert(ctx context.Context, file *fileresource.FileResource) (*apispecdoc.ApiSpecDoc, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Convert", ctx, file)
-	ret0, _ := ret[0].(*apiSpecDoc.ApiSpecDoc)
+	ret0, _ := ret[0].(*apispecdoc.ApiSpecDoc)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

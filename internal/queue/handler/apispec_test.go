@@ -6,10 +6,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
-	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	mock_logger "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/logger/mocks"
 	process "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/process/mocks"
 	publisher "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/queue/publisher/mocks"
+	"github.com/rog-golang-buddies/api_hub_common/apispecdoc"
 	"github.com/stretchr/testify/assert"
 	"github.com/wagslane/go-rabbitmq"
 	"testing"
@@ -44,7 +44,7 @@ func TestApiSpecDocHandler_Handle_publishError_NackDiscard(t *testing.T) {
 	conf := config.QueueConfig{
 		ScrapingResultQueue: queueName,
 	}
-	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apiSpecDoc.ApiSpecDoc{}, nil)
+	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apispecdoc.ApiSpecDoc{}, nil)
 	pub.EXPECT().Publish(gomock.Any(), gomock.Eq([]string{queueName}), gomock.Any()).Times(1).
 		Return(errors.New("publish error"))
 
@@ -68,7 +68,7 @@ func TestApiSpecDocHandler_Handle_allCorrectNotificationFalse_called1TimeAck(t *
 	conf := config.QueueConfig{
 		ScrapingResultQueue: queueName,
 	}
-	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apiSpecDoc.ApiSpecDoc{}, nil)
+	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apispecdoc.ApiSpecDoc{}, nil)
 	pub.EXPECT().Publish(gomock.Any(), gomock.Eq([]string{queueName}), gomock.Any()).Times(1).Return(nil)
 
 	handl := NewApiSpecDocHandler(pub, conf, proc, log)
@@ -93,7 +93,7 @@ func TestApiSpecDocHandler_Handle_allCorrectNotificationFalse_called2TimesAck(t 
 		ScrapingResultQueue: resQName,
 		NotificationQueue:   notQName,
 	}
-	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apiSpecDoc.ApiSpecDoc{}, nil)
+	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apispecdoc.ApiSpecDoc{}, nil)
 	firstCall := pub.EXPECT().Publish(gomock.Any(), gomock.Eq([]string{resQName}), gomock.Any()).Times(1).Return(nil)
 	pub.EXPECT().Publish(gomock.Any(), gomock.Eq([]string{notQName}), gomock.Any()).Times(1).Return(nil).After(firstCall)
 
@@ -120,7 +120,7 @@ func TestApiSpecDocHandler_Handle_notificationError_called2TimesAck(t *testing.T
 		ScrapingResultQueue: resQName,
 		NotificationQueue:   notQName,
 	}
-	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apiSpecDoc.ApiSpecDoc{}, nil)
+	proc.EXPECT().Process(gomock.Any(), "test url").Times(1).Return(&apispecdoc.ApiSpecDoc{}, nil)
 	firstCall := pub.EXPECT().Publish(gomock.Any(), gomock.Eq([]string{resQName}), gomock.Any()).
 		Times(1).
 		Return(nil)

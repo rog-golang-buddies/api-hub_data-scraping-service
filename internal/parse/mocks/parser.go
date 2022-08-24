@@ -9,8 +9,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	apiSpecDoc "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/apiSpecDoc"
 	fileresource "github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/dto/fileresource"
+	apispecdoc "github.com/rog-golang-buddies/api_hub_common/apispecdoc"
 )
 
 // MockParser is a mock of Parser interface.
@@ -51,10 +51,10 @@ func (mr *MockParserMockRecorder) GetType() *gomock.Call {
 }
 
 // Parse mocks base method.
-func (m *MockParser) Parse(ctx context.Context, content []byte) (*apiSpecDoc.ApiSpecDoc, error) {
+func (m *MockParser) Parse(ctx context.Context, content []byte) (*apispecdoc.ApiSpecDoc, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Parse", ctx, content)
-	ret0, _ := ret[0].(*apiSpecDoc.ApiSpecDoc)
+	ret0, _ := ret[0].(*apispecdoc.ApiSpecDoc)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

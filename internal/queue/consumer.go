@@ -7,7 +7,8 @@ import (
 	"io"
 )
 
-//Consumer is just an interface for the library consumer which doesn't have one.
+// Consumer is just an interface for the library consumer which doesn't have one.
+//
 //go:generate mockgen -source=consumer.go -destination=./mocks/consumer.go
 type Consumer interface {
 	io.Closer

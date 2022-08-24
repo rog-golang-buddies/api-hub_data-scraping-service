@@ -4,7 +4,8 @@ import (
 	"github.com/rog-golang-buddies/api-hub_data-scraping-service/internal/config"
 )
 
-//Logger represents common logger interface
+// Logger represents common logger interface
+//
 //go:generate mockgen -source=logger.go -destination=./mocks/logger.go
 type Logger interface {
 	Fatal(args ...interface{})
