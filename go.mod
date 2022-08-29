@@ -10,7 +10,7 @@ require (
 	github.com/rog-golang-buddies/api_hub_common v0.0.3
 	github.com/stretchr/testify v1.8.0
 	github.com/wagslane/go-rabbitmq v0.10.0
-	go.uber.org/zap v1.22.0
+	go.uber.org/zap v1.23.0
 )
 
 require (
