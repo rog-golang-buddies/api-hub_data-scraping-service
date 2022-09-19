@@ -3,7 +3,7 @@ module github.com/rog-golang-buddies/api-hub_data-scraping-service
 go 1.18
 
 require (
-	github.com/getkin/kin-openapi v0.100.0
+	github.com/getkin/kin-openapi v0.102.0
 	github.com/golang/mock v1.6.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/rabbitmq/amqp091-go v1.4.0
