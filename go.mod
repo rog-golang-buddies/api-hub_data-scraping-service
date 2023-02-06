@@ -6,7 +6,7 @@ require (
 	github.com/getkin/kin-openapi v0.100.0
 	github.com/golang/mock v1.6.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/rabbitmq/amqp091-go v1.4.0
+	github.com/rabbitmq/amqp091-go v1.6.1
 	github.com/rog-golang-buddies/api_hub_common v0.1.1
 	github.com/stretchr/testify v1.8.0
 	github.com/wagslane/go-rabbitmq v0.10.0
